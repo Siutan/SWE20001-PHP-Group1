@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 // reactstrap components
 import {
@@ -8,29 +8,29 @@ import {
   CardTitle,
   Table,
   Row,
-  Col,
-} from "reactstrap";
+  Col
+} from 'reactstrap'
 
-function Inventory() {
+function Sales () {
   return (
     <>
-      <div className="content">
+      <div className='content'>
         <Row>
-          <Col md="12">
+          <Col md='12'>
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Simple Table</CardTitle>
-                <p className='category'>Inventory Level</p>
+                <CardTitle tag='h4'>Simple Table</CardTitle>
+                <p className='category'>Sales Records</p>
               </CardHeader>
               <CardBody>
-                <Table className="tablesorter" responsive>
-                  <thead className="text-primary">
+                <Table className='tablesorter' responsive>
+                  <thead className='text-primary'>
                     <tr>
                       <th>Product Number</th>
                       <th>Product Name</th>
                       <th>Total Stock</th>
                       <th>Stock Remaining</th>
-                      <th className="text-center">Price (EA)</th>
+                      <th className='text-center'>Earnings (Monthly)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -39,70 +39,70 @@ function Inventory() {
                       <td>product 1</td>
                       <td>1200</td>
                       <td>1000</td>
-                      <td className="text-center">$36,738</td>
+                      <td className='text-center'>$36,738</td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 2</td>
                       <td>3000</td>
                       <td>1739</td>
-                      <td className="text-center">$23,789</td>
+                      <td className='text-center'>$23,789</td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>product 3</td>
                       <td>1000</td>
                       <td>332</td>
-                      <td className="text-center">$56,142</td>
+                      <td className='text-center'>$56,142</td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 4</td>
                       <td>10,000</td>
                       <td>3564</td>
-                      <td className="text-center">$38,735</td>
+                      <td className='text-center'>$38,735</td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 5</td>
                       <td>2800</td>
                       <td>239</td>
-                      <td className="text-center">$63,542</td>
+                      <td className='text-center'>$63,542</td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 6</td>
                       <td>2800</td>
                       <td>485</td>
-                      <td className="text-center">$78,615</td>
+                      <td className='text-center'>$78,615</td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 7</td>
                       <td>2800</td>
                       <td>504</td>
-                      <td className="text-center">$98,615</td>
+                      <td className='text-center'>$98,615</td>
                     </tr>
                   </tbody>
                 </Table>
               </CardBody>
             </Card>
           </Col>
-          <Col md="12">
-            <Card className="card-plain">
+          <Col md='12'>
+            <Card className='card-plain'>
               <CardHeader>
-                <CardTitle tag="h4">Table but different style</CardTitle>
-                <p className="category">Inventory Level</p>
+                <CardTitle tag='h4'>Table but different style</CardTitle>
+                <p className='category'>Sales Records</p>
               </CardHeader>
               <CardBody>
-                <Table className="tablesorter" responsive>
-                  <thead className="text-primary">
+                <Table className='tablesorter' responsive>
+                  <thead className='text-primary'>
                     <tr>
                       <th>Product Number</th>
                       <th>Product Name</th>
-                      <th>Total Stock</th>
-                      <th>Stock Remaining</th>
-                      <th className="text-center">Price (EA)</th>
+                      <th>Total Sold</th>
+                      <th></th>
+                      <th className='text-center'>Earnings (Monthly)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -111,49 +111,49 @@ function Inventory() {
                       <td>product 1</td>
                       <td>1200</td>
                       <td>1000</td>
-                      <td className="text-center">$36,738</td>
+                      <td className='text-center'>$36,738</td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 2</td>
                       <td>3000</td>
                       <td>1739</td>
-                      <td className="text-center">$23,789</td>
+                      <td className='text-center'>$23,789</td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>product 3</td>
                       <td>1000</td>
                       <td>332</td>
-                      <td className="text-center">$56,142</td>
+                      <td className='text-center'>$56,142</td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 4</td>
                       <td>10,000</td>
                       <td>3564</td>
-                      <td className="text-center">$38,735</td>
+                      <td className='text-center'>$38,735</td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 5</td>
                       <td>2800</td>
                       <td>239</td>
-                      <td className="text-center">$63,542</td>
+                      <td className='text-center'>$63,542</td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 6</td>
                       <td>2800</td>
                       <td>485</td>
-                      <td className="text-center">$78,615</td>
+                      <td className='text-center'>$78,615</td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 7</td>
                       <td>2800</td>
                       <td>504</td>
-                      <td className="text-center">$98,615</td>
+                      <td className='text-center'>$98,615</td>
                     </tr>
                   </tbody>
                 </Table>
@@ -163,7 +163,7 @@ function Inventory() {
         </Row>
       </div>
     </>
-  );
+  )
 }
 
-export default Inventory;
+export default Sales;
