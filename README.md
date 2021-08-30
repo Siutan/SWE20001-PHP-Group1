@@ -1,12 +1,12 @@
 ## Quick start
 
-Step 1:
-
-- Clone the repo: `git clone https://github.com/creativetimofficial/black-dashboard-react.git`.
+- Clone the repo
+- npm install
+- npm start
 
 
 ## Documentation
-The documentation for the Black Dashboard React is hosted at our [website](https://demos.creative-tim.com/black-dashboard-react/#/documentation/tutorial).
+
 
 
 ## File Structure
