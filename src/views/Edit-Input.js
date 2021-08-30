@@ -15,7 +15,7 @@ import {
   Col,
 } from "reactstrap";
 
-function UserProfile() {
+function EditInput() {
   return (
     <>
       <div className="content">
@@ -112,7 +112,7 @@ function UserProfile() {
                   <a href="#pablo" onClick={(e) => e.preventDefault()}>
                     <img
                       alt="Product"
-                      src={require("assets/img/anime3.png").default} // THIS IS A PLACEHOLDER, replace with image of product being edited.
+                      src={require("assets/img/product-image-placeholder.jpg").default} // THIS IS A PLACEHOLDER, replace with image of product being edited.
                     />
                     <h5 className="title">*Prodct ID*</h5>
                   </a>
@@ -127,4 +127,4 @@ function UserProfile() {
   );
 }
 
-export default UserProfile;
+export default EditInput;

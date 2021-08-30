@@ -248,10 +248,10 @@ let chartExample3 = {
     gradientStroke.addColorStop(0, "rgba(119,52,169,0)"); //purple colors
 
     return {
-      labels: ["USA", "GER", "AUS", "UK", "RO", "BR"],
+      labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN"],
       datasets: [
         {
-          label: "Countries",
+          label: "Sales Average",
           fill: true,
           backgroundColor: gradientStroke,
           hoverBackgroundColor: gradientStroke,

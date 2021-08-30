@@ -2,9 +2,9 @@ import Dashboard from "views/Dashboard.js";
 import Icons from "views/Icons.js";
 //import Map from "views/Map.js";
 import Notifications from "views/Notifications.js";
-import Inventory from "views/TableList.js";
+import Inventory from "views/Inventory.js";
 import Typography from "views/Typography.js";
-import UserProfile from "views/UserProfile.js";
+import EditInput from "views/Edit-Input.js";
 import Sales from "views/Sales";
 
 var routes = [
@@ -16,8 +16,8 @@ var routes = [
     layout: "/admin",
   },
   {
-    path: "/icons",
-    name: "Sales",
+    path: "/dev-stuff",
+    name: "Dev-Stuff",
     icon: "tim-icons icon-atom",
     component: Icons,
     layout: "/admin",
@@ -30,10 +30,10 @@ var routes = [
     layout: "/admin",
   },
   {
-    path: "/user-profile",
-    name: "User Profile",
+    path: "/edit-input",
+    name: "Edit/iput form",
     icon: "tim-icons icon-single-02",
-    component: UserProfile,
+    component: EditInput,
     layout: "/admin",
   },
   {
