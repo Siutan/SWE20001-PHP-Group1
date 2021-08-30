@@ -41,7 +41,7 @@ function AdminNavbar(props) {
       setcolor("navbar-transparent");
     }
   };
-  // this function opens and closes the collapse on small devices
+  // this function opens and closes the collapse on smaller devices
   const toggleCollapse = () => {
     if (collapseOpen) {
       setcolor("navbar-transparent");
