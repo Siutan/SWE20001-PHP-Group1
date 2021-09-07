@@ -2,6 +2,7 @@ import React from 'react'
 
 // reactstrap components
 import {
+  Button,
   Card,
   CardHeader,
   CardBody,
@@ -26,134 +27,84 @@ function Sales () {
                 <Table className='tablesorter' responsive>
                   <thead className='text-primary'>
                     <tr>
-                      <th>Product Number</th>
+                      <th>Product ID</th>
                       <th>Product Name</th>
-                      <th>Total Stock</th>
-                      <th>Stock Remaining</th>
-                      <th className='text-center'>Earnings (Monthly)</th>
+                      <th>Product Group</th>
+                      <th>Amount Sold (Quantity)</th>
+                      <th className='text-center'>Amount Sold ($)</th>
+                      <th className='text-center'>Edit Entry</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td>A-0001</td>
                       <td>product 1</td>
-                      <td>1200</td>
+                      <td>Vitamins</td>
                       <td>1000</td>
                       <td className='text-center'>$36,738</td>
+                      <td className='text-center'>
+                        <Button className="btn-fill" color="info"> Edit </Button>
+                      </td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 2</td>
-                      <td>3000</td>
+                      <td>Sanitary</td>
                       <td>1739</td>
                       <td className='text-center'>$23,789</td>
+                      <td className='text-center'>
+                        <Button className="btn-fill" color="info"> Edit </Button>
+                      </td>
                     </tr>
                     <tr>
-                      <td>A-0001</td>
+         p             <td>A-0001</td>
                       <td>product 3</td>
-                      <td>1000</td>
+                      <td>Utensils</td>
                       <td>332</td>
                       <td className='text-center'>$56,142</td>
+                      <td className='text-center'>
+                        <Button className="btn-fill" color="info"> Edit </Button>
+                      </td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 4</td>
-                      <td>10,000</td>
+                      <td>Vitamins</td>
                       <td>3564</td>
                       <td className='text-center'>$38,735</td>
+                      <td className='text-center'>
+                        <Button className="btn-fill" color="info"> Edit </Button>
+                      </td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 5</td>
-                      <td>2800</td>
+                      <td>Analgesics</td>
                       <td>239</td>
                       <td className='text-center'>$63,542</td>
+                      <td className='text-center'>
+                        <Button className="btn-fill" color="info"> Edit </Button>
+                      </td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 6</td>
-                      <td>2800</td>
+                      <td>Antacids</td>
                       <td>485</td>
                       <td className='text-center'>$78,615</td>
+                      <td className='text-center'>
+                        <Button className="btn-fill" color="info"> Edit </Button>
+                      </td>
                     </tr>
                     <tr>
                       <td>A-0001</td>
                       <td>Product 7</td>
-                      <td>2800</td>
+                      <td>Antibacterials</td>
                       <td>504</td>
                       <td className='text-center'>$98,615</td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col md='12'>
-            <Card className='card-plain'>
-              <CardHeader>
-                <CardTitle tag='h4'>Table but different style</CardTitle>
-                <p className='category'>Sales Records</p>
-              </CardHeader>
-              <CardBody>
-                <Table className='tablesorter' responsive>
-                  <thead className='text-primary'>
-                    <tr>
-                      <th>Product Number</th>
-                      <th>Product Name</th>
-                      <th>Total Sold</th>
-                      <th></th>
-                      <th className='text-center'>Earnings (Monthly)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>A-0001</td>
-                      <td>product 1</td>
-                      <td>1200</td>
-                      <td>1000</td>
-                      <td className='text-center'>$36,738</td>
-                    </tr>
-                    <tr>
-                      <td>A-0001</td>
-                      <td>Product 2</td>
-                      <td>3000</td>
-                      <td>1739</td>
-                      <td className='text-center'>$23,789</td>
-                    </tr>
-                    <tr>
-                      <td>A-0001</td>
-                      <td>product 3</td>
-                      <td>1000</td>
-                      <td>332</td>
-                      <td className='text-center'>$56,142</td>
-                    </tr>
-                    <tr>
-                      <td>A-0001</td>
-                      <td>Product 4</td>
-                      <td>10,000</td>
-                      <td>3564</td>
-                      <td className='text-center'>$38,735</td>
-                    </tr>
-                    <tr>
-                      <td>A-0001</td>
-                      <td>Product 5</td>
-                      <td>2800</td>
-                      <td>239</td>
-                      <td className='text-center'>$63,542</td>
-                    </tr>
-                    <tr>
-                      <td>A-0001</td>
-                      <td>Product 6</td>
-                      <td>2800</td>
-                      <td>485</td>
-                      <td className='text-center'>$78,615</td>
-                    </tr>
-                    <tr>
-                      <td>A-0001</td>
-                      <td>Product 7</td>
-                      <td>2800</td>
-                      <td>504</td>
-                      <td className='text-center'>$98,615</td>
+                      <td className='text-center'>
+                        <Button className="btn-fill" color="info"> Edit </Button>
+                      </td>
                     </tr>
                   </tbody>
                 </Table>
@@ -164,6 +115,10 @@ function Sales () {
       </div>
     </>
   )
+}
+
+function fire(){
+
 }
 
 export default Sales;

@@ -98,8 +98,11 @@ function EditInput() {
                 </Form>
               </CardBody>
               <CardFooter>
-                <Button className="btn-fill" color="primary" type="submit">
+                <Button className="btn-fill" color="info" type="submit">
                   Save
+                </Button>
+                <Button className='btn-fill' color='warning' type='submit'>
+                  Delete
                 </Button>
               </CardFooter>
             </Card>

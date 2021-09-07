@@ -29,7 +29,7 @@ var routes = [
   },
   {
     path: "/edit-input",
-    name: "Edit/iput form",
+    name: "Edit/input form",
     icon: "tim-icons icon-single-02",
     component: EditInput,
     layout: "/admin",
