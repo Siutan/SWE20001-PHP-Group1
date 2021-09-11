@@ -22,6 +22,8 @@ import {
   ModalHeader,
 } from "reactstrap";
 
+
+
 function AdminNavbar(props) {
   const [collapseOpen, setcollapseOpen] = React.useState(false);
   const [modalSearch, setmodalSearch] = React.useState(false);
@@ -87,6 +89,7 @@ function AdminNavbar(props) {
                   <span className="d-lg-none d-md-block">Search</span>
                 </Button>
               </InputGroup>
+              {/* Notifications Dropdown */}
               <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
@@ -126,6 +129,7 @@ function AdminNavbar(props) {
                   </NavLink>
                 </DropdownMenu>
               </UncontrolledDropdown>
+              {/* Profile Dropdown */}
               <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
