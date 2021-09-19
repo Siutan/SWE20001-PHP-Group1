@@ -26,12 +26,13 @@ import {
 } from "reactstrap";
 
 // core components
-import {
-  chartExample1,
-  chartExample2,
-  chartExample3,
-  chartExample4,
-} from "variables/charts.js";
+import chartOptions1 from "../variables/chartOptions1";
+import chartOptions3 from "../variables/chartOptions3";
+import chartOptions4 from "../variables/chartOptions4";
+import chart1Data from 'variables/chart1Data.js';
+import chart2Data from 'variables/chart2Data.js';
+import chart3Data from 'variables/chart3Data.js';
+import chart4Data from 'variables/chart4Data.js';
 
 function Dashboard(props) {
   const [bigChartData, setbigChartData] = React.useState("data1");
@@ -56,20 +57,20 @@ function Dashboard(props) {
                       data-toggle="buttons"
                     >
                       <Button
+                        color="info"
+                        id="1"
+                        size="sm"
                         tag="label"
                         className={classNames("btn-simple", {
                           active: bigChartData === "data1",
                         })}
-                        color="info"
-                        id="0"
-                        size="sm"
                         onClick={() => setBgChartData("data1")}
                       >
                         <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
                           2019
                         </span>
                         <span className="d-block d-sm-none">
-                          <i className="tim-icons icon-single-02" />
+                          <i className="tim-icons icon-gift-2" />
                         </span>
                       </Button>
                       <Button
@@ -113,8 +114,8 @@ function Dashboard(props) {
               <CardBody>
                 <div className="chart-area">
                   <Line
-                    data={chartExample1[bigChartData]}
-                    options={chartExample1.options}
+                    data={chart1Data[bigChartData]}
+                    options={chartOptions1}
                   />
                 </div>
               </CardBody>
@@ -130,17 +131,17 @@ function Dashboard(props) {
                   <i className="tim-icons icon-bell-55 text-info" />
                   <select>
                     ;<option value='' disabled selected>
-  Select Product
-</option>
-;<option value=''>
-  Product 1
-</option>
-;<option value='' >
-  Product 2
-</option>
-;<option value='' >
-  Product 3
-</option>
+                            Select Product
+                          </option>
+                          ;<option value=''>
+                            Product 1
+                          </option>
+                          ;<option value='' >
+                            Product 2
+                          </option>
+                          ;<option value='' >
+                            Product 3
+                          </option>
 
                   </select>
                 </CardTitle>
@@ -148,8 +149,8 @@ function Dashboard(props) {
               <CardBody>
                 <div className="chart-area">
                   <Line
-                    data={chartExample2.data}
-                    options={chartExample2.options}
+                    data={chart2Data.data}
+                    options={chartOptions1}
                   />
                 </div>
               </CardBody>
@@ -167,8 +168,8 @@ function Dashboard(props) {
               <CardBody>
                 <div className="chart-area">
                   <Bar
-                    data={chartExample3.data}
-                    options={chartExample3.options}
+                    data={chart3Data.data}
+                    options={chartOptions3}
                   />
                 </div>
               </CardBody>
@@ -185,8 +186,8 @@ function Dashboard(props) {
               <CardBody>
                 <div className="chart-area">
                   <Line
-                    data={chartExample4.data}
-                    options={chartExample4.options}
+                    data={chart4Data.data}
+                    options={chartOptions4}
                   />
                 </div>
               </CardBody>
