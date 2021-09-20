@@ -5,5 +5,4 @@
 - npm start
 
 
-## TODO
-- Products Page (Add, Edit or Remove Products)
+## Documentation
