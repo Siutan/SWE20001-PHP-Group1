@@ -13,11 +13,18 @@ import routes from "routes.js";
 import logo from "assets/img/react-logo.png";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
 
+import LoginModal from "views/LoginModal";
+import NotificationAlert from "components/Notification/NotificationAlert";
+import { Alert } from "reactstrap";
+
 var ps;
 
 function Admin(props) {
+  console.log(props)
   const location = useLocation();
   const mainPanelRef = React.useRef(null);
+  //show/hide login popup
+  const [showLogin,setShowLogin] = React.useState(false)
   const [sidebarOpened, setsidebarOpened] = React.useState(
     document.documentElement.className.indexOf("nav-open") !== -1
   );
@@ -55,6 +62,14 @@ function Admin(props) {
       mainPanelRef.current.scrollTop = 0;
     }
   }, [location]);
+
+    React.useEffect(()=>{
+    if(localStorage.getItem('user')){
+      setShowLogin(false);
+    }else{
+      setShowLogin(true);
+    }
+  },[showLogin])
   // this function opens and closes the sidebar on small devices
   const toggleSidebar = () => {
     document.documentElement.classList.toggle("nav-open");
@@ -109,6 +124,12 @@ function Admin(props) {
               </Switch>
             </div>
           </div>
+                 
+           ):(
+            <LoginModal showLogin={showLogin}/>
+            // <NotificationAlert place='tc'/>
+           )}
+           
           <FixedPlugin bgColor={color} handleBgClick={changeColor} />
         </React.Fragment>
       )}
