@@ -87,11 +87,11 @@ function LoginModal(props) {
     }}
 
   return (
-    <>   
-
+    <> 
 			<Modal
+      className="modal-container custom-map-modal"
       isOpen={showModal}
-        backdrop="static"
+      backdrop="static"
 			>
   
         <ModalBody>

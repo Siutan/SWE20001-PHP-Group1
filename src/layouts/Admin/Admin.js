@@ -14,7 +14,6 @@ import logo from "assets/img/react-logo.png";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
 
 import LoginModal from "views/LoginModal";
-import NotificationAlert from "components/Notification/NotificationAlert";
 import { Alert } from "reactstrap";
 
 var ps;
@@ -127,7 +126,7 @@ function Admin(props) {
                  
            ):(
             <LoginModal showLogin={showLogin}/>
-            // <NotificationAlert place='tc'/>
+            
            )}
            
           <FixedPlugin bgColor={color} handleBgClick={changeColor} />
