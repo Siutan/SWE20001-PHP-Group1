@@ -47,6 +47,6 @@ var routes = [
     icon: "tim-icons icon-money-coins",
     component: Sales,
     layout: "/admin",
-  },
+  }
 ];
 export default routes;

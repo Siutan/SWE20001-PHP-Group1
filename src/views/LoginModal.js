@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import AuthService from "../services/auth.service";
 // react plugin for creating notifications over the dashboard
+import Cookies from 'js-cookie'
+
 
 // reactstrap components
 import {
@@ -23,7 +25,7 @@ function LoginModal(props) {
   const form = useRef();
   const checkBtn = useRef();
 
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState();
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -31,6 +33,7 @@ function LoginModal(props) {
 
   const onChangeUsername = (e) => {
     const username = e.target.value;
+    setUsername(username);
     if(username !== '1' && username !== '2'){
         setMessage('Invalid username');
         setShowAlert(true);
@@ -65,8 +68,8 @@ function LoginModal(props) {
       AuthService.login(username, password).then(
         (response) => {
           setShowAlert(true)
+          console.log(document.cookies)
           window.location.reload();
-          
         },
         (error) => {
           const resMessage =

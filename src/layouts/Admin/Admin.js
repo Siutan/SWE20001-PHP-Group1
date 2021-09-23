@@ -127,7 +127,7 @@ function Admin(props) {
            ):(
             <LoginModal showLogin={showLogin}/>
             
-           )}
+           )
            
           <FixedPlugin bgColor={color} handleBgClick={changeColor} />
         </React.Fragment>
