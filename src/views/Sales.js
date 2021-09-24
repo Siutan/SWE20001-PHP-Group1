@@ -13,64 +13,7 @@ import {
   Col
 } from 'reactstrap'
 
-let tableRowElement
-function toggleModal (element) {
-  // GET VALUES FROM TABLE
-  tableRowElement = element.parentElement.parentElement
-  const date = tableRowElement.getElementsByClassName('date')[0].innerHTML
-  const pid = tableRowElement.getElementsByClassName('productId')[0].innerHTML
-  const name = tableRowElement.getElementsByClassName('productName')[0]
-    .innerHTML
-  const group = tableRowElement.getElementsByClassName('productGroup')[0]
-    .innerHTML
-  const quantity = tableRowElement.getElementsByClassName('quantity')[0]
-    .innerHTML
-  const money = tableRowElement.getElementsByClassName('dollars')[0].innerHTML
 
-  //	IMPORT VALUES FROM TABLE INTO FIELDS IN POPUP
-  document.getElementById('date').value = date
-  document.getElementById('productId').value = pid
-  document.getElementById('name').value = name
-  document.getElementById('group').value = group
-  document.getElementById('quantity').value = quantity
-  document.getElementById('money').value = money
-
-  openModal()
-}
-
-function saveInfo () {
-  const date = document.getElementById('date').value
-  const pid = document.getElementById('productId').value
-  const name = document.getElementById('name').value
-  const group = document.getElementById('group').value
-  const quantity = document.getElementById('quantity').value
-  const money = document.getElementById('money').value
-
-  tableRowElement.getElementsByClassName('date')[0].innerHTML = date
-  tableRowElement.getElementsByClassName('productId')[0].innerHTML = pid
-  tableRowElement.getElementsByClassName('productName')[0].innerHTML = name
-  tableRowElement.getElementsByClassName('productGroup')[0].innerHTML = group
-  tableRowElement.getElementsByClassName('quantity')[0].innerHTML = quantity
-  tableRowElement.getElementsByClassName('dollars')[0].innerHTML = money
-
-  closeModal()
-}
-
-function openModal () {
-  document.getElementById('backdrop').style.display = 'block'
-  document.getElementById('exampleModal').style.display = 'block'
-  document.getElementById('exampleModal').classList.add('show')
-}
-
-function closeModal () {
-  document.getElementById('backdrop').style.display = 'none'
-  document.getElementById('exampleModal').style.display = 'none'
-  document.getElementById('exampleModal').classList.remove('show')
-}
-
-function removeRow (current) {
-  current.parentElement.parentElement.remove()
-}
 
 //GENERATING THE TABLE
 const requestUrl = 'https://sisrestapi.herokuapp.com/sales'
@@ -79,12 +22,16 @@ let salesData
 
 var classDict = {
   0: "salesId",
-  1: "date",
-  2: "productId",
-  3: "productName",
-  4: "productGroup",
-  5: "quantity",
-  6: "dollars",
+  1: "productId",
+  2: "productName",
+  3: "productGroup",
+  4: "productDesc",
+  5: "dollars",
+  6: "quantity",
+  7: "date",
+  8: "salesId",
+  9: "revenue"
+ 
 };
 
 async function fetchSales () {
@@ -99,7 +46,7 @@ async function fetchSales () {
     })
 }
 
-async function lmao () {
+async function generateTables () {
   await fetchSales()
   console.log(salesData)
   var columns = addAllColumnHeaders(salesData)
@@ -153,7 +100,67 @@ function addAllColumnHeaders (myList) {
 }
 
 function Sales () {
-  lmao() // CALLING THE TABLE GENERATION BEFORE RENDER
+  let tableRowElement
+
+  function toggleModal (element) {
+    // GET VALUES FROM TABLE
+    tableRowElement = element.parentElement.parentElement
+    const date = tableRowElement.getElementsByClassName('date')[0].innerHTML
+    const pid = tableRowElement.getElementsByClassName('productId')[0].innerHTML
+    const name = tableRowElement.getElementsByClassName('productName')[0]
+      .innerHTML
+    const group = tableRowElement.getElementsByClassName('productGroup')[0]
+      .innerHTML
+    const quantity = tableRowElement.getElementsByClassName('quantity')[0]
+      .innerHTML
+    const money = tableRowElement.getElementsByClassName('dollars')[0].innerHTML
+
+    //	IMPORT VALUES FROM TABLE INTO FIELDS IN POPUP
+    document.getElementById('date').value = date
+    document.getElementById('productId').value = pid
+    document.getElementById('name').value = name
+    document.getElementById('group').value = group
+    document.getElementById('quantity').value = quantity
+    document.getElementById('money').value = money
+
+    openModal()
+  }
+
+  function saveInfo () {
+    const date = document.getElementById('date').value
+    const pid = document.getElementById('productId').value
+    const name = document.getElementById('name').value
+    const group = document.getElementById('group').value
+    const quantity = document.getElementById('quantity').value
+    const money = document.getElementById('money').value
+
+    tableRowElement.getElementsByClassName('date')[0].innerHTML = date
+    tableRowElement.getElementsByClassName('productId')[0].innerHTML = pid
+    tableRowElement.getElementsByClassName('productName')[0].innerHTML = name
+    tableRowElement.getElementsByClassName('productGroup')[0].innerHTML = group
+    tableRowElement.getElementsByClassName('quantity')[0].innerHTML = quantity
+    tableRowElement.getElementsByClassName('dollars')[0].innerHTML = money
+
+    closeModal()
+  }
+
+  function openModal () {
+    document.getElementById('backdrop').style.display = 'block'
+    document.getElementById('exampleModal').style.display = 'block'
+    document.getElementById('exampleModal').classList.add('show')
+  }
+
+  function closeModal () {
+    document.getElementById('backdrop').style.display = 'none'
+    document.getElementById('exampleModal').style.display = 'none'
+    document.getElementById('exampleModal').classList.remove('show')
+  }
+
+  function removeRow (current) {
+    current.parentElement.parentElement.remove()
+  }
+
+  generateTables() // CALLING THE TABLE GENERATION BEFORE RENDER
   return (
     <>
       <div className='content'>
@@ -179,9 +186,11 @@ function Sales () {
                       <th>Product Name</th>
                       <th>Product Group</th>
                       <th>Product Description</th>
-                      <th>Date</th>
-                      <th>Amount Sold (Quantity)</th>
                       <th>Amount Sold ($)</th>
+                      <th>Amount Sold (Quantity)</th>
+                      <th>Date</th>
+                      <th>Sales ID</th>
+                      <th>Revenue</th>
                       <th>Edit Entry</th>
                     </tr>
                   </thead>
