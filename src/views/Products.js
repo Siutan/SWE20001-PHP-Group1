@@ -13,7 +13,7 @@ import {
   Col,
 } from "reactstrap";
 
-const requestUrl = 'https://sisrestapi.herokuapp.com/inventory'
+const requestUrl = 'https://sisrestapi.herokuapp.com/products'
 
 let inventoryData
 
@@ -65,7 +65,7 @@ function addAllColumnHeaders (myList) {
 }
 
 
-function Inventory() {
+function Products() {
   generateTables()
   return (
     <>
@@ -86,10 +86,8 @@ function Inventory() {
                       <th>Product Group</th>
                       <th>Product Description</th>
                       <th className="text-center">Price ($)</th>
-                      <th className="text-center">Update Index</th>
-                      <th className="text-center">Current Stock</th>
-                      <th className="text-center">Maximum Stock Capacity</th>
-                      <th className="text-center">Date</th>
+                      <th className="text-center"></th>
+                      <th className="text-center"></th>
                     </tr>
                   </thead>
                   <tbody id='inventoryTable'>
@@ -104,4 +102,4 @@ function Inventory() {
   );
 }
 
-export default Inventory;
+export default Products;

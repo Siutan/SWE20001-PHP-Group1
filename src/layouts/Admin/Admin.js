@@ -19,7 +19,6 @@ import { Alert } from "reactstrap";
 var ps;
 
 function Admin(props) {
-  console.log(props)
   const location = useLocation();
   const mainPanelRef = React.useRef(null);
   //show/hide login popup

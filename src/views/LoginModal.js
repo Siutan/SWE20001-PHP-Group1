@@ -34,7 +34,7 @@ function LoginModal(props) {
   const onChangeUsername = (e) => {
     const username = e.target.value;
     setUsername(username);
-    if(username !== '1' && username !== '2'){
+    if(username == ""){
         setMessage('Invalid username');
         setShowAlert(true);
     }else{
@@ -68,7 +68,6 @@ function LoginModal(props) {
       AuthService.login(username, password).then(
         (response) => {
           setShowAlert(true)
-          console.log(document.cookies)
           window.location.reload();
         },
         (error) => {
@@ -81,7 +80,6 @@ function LoginModal(props) {
 
           setLoading(false);
           setShowAlert(true);
-          console.log(resMessage);
           setMessage('User credentials are invalid!');
         }
       );

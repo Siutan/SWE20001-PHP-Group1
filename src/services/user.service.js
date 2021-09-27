@@ -15,4 +15,4 @@ const getAdminBoard = () => {
 export default {
   getPublicContent,
   getAdminBoard,
-};
+};  

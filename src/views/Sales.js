@@ -13,26 +13,10 @@ import {
   Col
 } from 'reactstrap'
 
-
-
 //GENERATING THE TABLE
 const requestUrl = 'https://sisrestapi.herokuapp.com/sales'
 
 let salesData
-
-var classDict = {
-  0: "salesId",
-  1: "productId",
-  2: "productName",
-  3: "productGroup",
-  4: "productDesc",
-  5: "dollars",
-  6: "quantity",
-  7: "date",
-  8: "salesId",
-  9: "revenue"
- 
-};
 
 async function fetchSales () {
   await fetch(requestUrl, {
@@ -48,7 +32,6 @@ async function fetchSales () {
 
 async function generateTables () {
   await fetchSales()
-  console.log(salesData)
   var columns = addAllColumnHeaders(salesData)
   for (var i = 0; i < salesData.length; i++) {
     var row$ = $(`<tr id=${i} />`)
@@ -59,25 +42,8 @@ async function generateTables () {
       if (cellValue == null) {
         cellValue = ''
       }
-        row$.append($(`<td class=${classDict[colIndex]}></td>`).html(cellValue))
+        row$.append($(`<td/>`).html(cellValue))
   }
-
-    var editButton =
-      '<button \
-          class="text-center align-middle" \
-          style="background-color:transparent;border:none;margin-left: 30px;" \
-          onClick="toggleModal(this)"> \
-            <i class="tim-icons icon-pencil"></i> \
-       </button>'
-    var deleteButton =
-      '<button \
-          class="text-center align-middle" \
-          style="background-color:transparent;border:none;margin-left: 30px;" \
-          onClick="removeRow(this)"> \
-            <i class="tim-icons icon-trash-simple"></i> \
-       </button>'
-
-    row$.append(editButton, deleteButton)
     $('#salesTable').append(row$)
   }
 }
@@ -100,66 +66,7 @@ function addAllColumnHeaders (myList) {
 }
 
 function Sales () {
-  let tableRowElement
-
-  function toggleModal (element) {
-    // GET VALUES FROM TABLE
-    tableRowElement = element.parentElement.parentElement
-    const date = tableRowElement.getElementsByClassName('date')[0].innerHTML
-    const pid = tableRowElement.getElementsByClassName('productId')[0].innerHTML
-    const name = tableRowElement.getElementsByClassName('productName')[0]
-      .innerHTML
-    const group = tableRowElement.getElementsByClassName('productGroup')[0]
-      .innerHTML
-    const quantity = tableRowElement.getElementsByClassName('quantity')[0]
-      .innerHTML
-    const money = tableRowElement.getElementsByClassName('dollars')[0].innerHTML
-
-    //	IMPORT VALUES FROM TABLE INTO FIELDS IN POPUP
-    document.getElementById('date').value = date
-    document.getElementById('productId').value = pid
-    document.getElementById('name').value = name
-    document.getElementById('group').value = group
-    document.getElementById('quantity').value = quantity
-    document.getElementById('money').value = money
-
-    openModal()
-  }
-
-  function saveInfo () {
-    const date = document.getElementById('date').value
-    const pid = document.getElementById('productId').value
-    const name = document.getElementById('name').value
-    const group = document.getElementById('group').value
-    const quantity = document.getElementById('quantity').value
-    const money = document.getElementById('money').value
-
-    tableRowElement.getElementsByClassName('date')[0].innerHTML = date
-    tableRowElement.getElementsByClassName('productId')[0].innerHTML = pid
-    tableRowElement.getElementsByClassName('productName')[0].innerHTML = name
-    tableRowElement.getElementsByClassName('productGroup')[0].innerHTML = group
-    tableRowElement.getElementsByClassName('quantity')[0].innerHTML = quantity
-    tableRowElement.getElementsByClassName('dollars')[0].innerHTML = money
-
-    closeModal()
-  }
-
-  function openModal () {
-    document.getElementById('backdrop').style.display = 'block'
-    document.getElementById('exampleModal').style.display = 'block'
-    document.getElementById('exampleModal').classList.add('show')
-  }
-
-  function closeModal () {
-    document.getElementById('backdrop').style.display = 'none'
-    document.getElementById('exampleModal').style.display = 'none'
-    document.getElementById('exampleModal').classList.remove('show')
-  }
-
-  function removeRow (current) {
-    current.parentElement.parentElement.remove()
-  }
-
+  
   generateTables() // CALLING THE TABLE GENERATION BEFORE RENDER
   return (
     <>
@@ -170,12 +77,6 @@ function Sales () {
               <CardHeader>
                 <CardTitle tag='h4'>Sales Records</CardTitle>
                 <p className='category'>Sales Record for the Current Month</p>
-                <Button className='btn-fill' color='info'>
-                  Test Button
-                </Button>
-                <Button className='btn-fill' color='info'>
-                  edit Records
-                </Button>
               </CardHeader>
               <CardBody>
                 <Table className='tablesorter' responsive>
@@ -191,7 +92,6 @@ function Sales () {
                       <th>Date</th>
                       <th>Sales ID</th>
                       <th>Revenue</th>
-                      <th>Edit Entry</th>
                     </tr>
                   </thead>
                   <tbody id='salesTable'></tbody>
