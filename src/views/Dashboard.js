@@ -39,6 +39,28 @@ function Dashboard(props) {
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
+
+  const ls = require('localstorage-ttl')
+
+  async function fetchSales () {
+  await fetch('https://sisrestapi.herokuapp.com/sales', {
+    method: 'GET',
+    credentials: 'include',
+    mode: 'cors'
+  })
+    .then(response => response.json())
+    .then(data => {
+      ls.set("salesData",data, 60000)
+    })
+}
+
+  if (ls.get("salesData") == null) {
+    fetchSales()
+    console.log("fetched data = " + ls.get("salesData"))
+  } else{
+    console.log(("cached data = " + ls.get("salesData")))
+  }
+
   return (
     <>
       <div className="content">

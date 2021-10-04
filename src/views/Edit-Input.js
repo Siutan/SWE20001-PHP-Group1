@@ -245,7 +245,6 @@ function deleteSales () {
   }
 }
 
-
 function EditInput() {
   return (
     <>
@@ -381,7 +380,7 @@ function EditInput() {
 
               <div class='form-group'>
                 <label for='date_sales'>Date</label>
-                <input type='text' id='date_sales' class='form-control' />
+                <input type='date' id='date_sales' class='form-control' />
               </div>
 
               <div class='form-group'>

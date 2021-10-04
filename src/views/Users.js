@@ -4,7 +4,6 @@ import $ from 'jquery'
 
 //SHOW ACCOUNTS
 let userList;
-let adminList;
 
 const userUrl= 'https://sisrestapi.herokuapp.com/users'
 const adminUrl= 'https://sisrestapi.herokuapp.com/users'
