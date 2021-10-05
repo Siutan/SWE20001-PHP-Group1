@@ -6,7 +6,6 @@ import $ from 'jquery'
 let userList;
 
 const userUrl= 'https://sisrestapi.herokuapp.com/users'
-const adminUrl= 'https://sisrestapi.herokuapp.com/users'
 
 async function fetchSales () {
   await fetch(userUrl, {
@@ -48,7 +47,7 @@ function addAllColumnHeaders(myList)
      for (var i = 0 ; i < myList.length ; i++) {
          var rowHash = myList[i];
          for (var key in rowHash) {
-             if ($.inArray(key, columnSet) == -1){
+             if ($.inArray(key, columnSet) === -1){
                  columnSet.push(key);
                  headerTr$.append($('<th/>').html(key));
              }
@@ -116,7 +115,7 @@ function editAccount () {
     admin: admin,
     password: password
   }
-  if(userId == '') {
+  if(userId === '') {
     alert('enter user Id of the account you want to update')
   } else {
     var r = window.confirm('do you want to Update the User records')
@@ -138,7 +137,7 @@ function editAccount () {
 //DELETE ACCOUNT
 function deleteAccount () {
   var userId = document.getElementById('userId').value
-  if (userId == '') {
+  if (userId === '') {
     alert('enter user Id of the account you want to delete')
   } else {
     var r = window.confirm(`do you want to Update the User records`)

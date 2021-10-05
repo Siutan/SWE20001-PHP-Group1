@@ -40,6 +40,7 @@ npm /* navbar color */
 *::after {
   box-sizing: border-box; }
 
+
 .custom-map-modal .modal-dialog {
 	 width: 100%;
 	 height: 100%;
@@ -4128,7 +4129,7 @@ input[type="button"].btn-block {
 
 .alert-danger {
   color: #fd5d93;
-  background-color: #fd77a4;
+  background-color: #ff1462;
   border-color: #fd77a4; }
   .alert-danger hr {
     border-top-color: #fd5e93; }

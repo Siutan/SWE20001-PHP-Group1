@@ -1,5 +1,5 @@
 import React from "react";
-import {Tabs, Tab, OverlayTrigger, Tooltip} from "react-bootstrap"
+import {Tabs, Tab, OverlayTrigger, Tooltip } from "react-bootstrap"
 
 //TOOLTIP FOR PRODUCT ID
 const renderTooltip = props => (
@@ -249,9 +249,10 @@ function EditInput() {
   return (
     <>
       <div className="content">
-        <Tabs defaultActiveKey="profile" className="mb-3">
+
+        <Tabs variant="pills" defaultActiveKey="profile" className="mb-3">
           
-          <Tab eventKey="Product" title="Product">
+          <Tab eventKey="Product" title="Product" style={{color: "white"}}>
             <div>
               <div class='form-group'>
                 <label for='pID_product'>Product ID</label>
@@ -310,7 +311,7 @@ function EditInput() {
             </div>
           </Tab>
 
-          <Tab eventKey="Inventory" title="Inventory">
+          <Tab eventKey="Inventory" title="Inventory" style={{color: "white"}}>
              <div>
                <div class='form-group'>
                 <label for='updateIndex'>Update Index</label>
@@ -361,7 +362,8 @@ function EditInput() {
             </div>
           </Tab>
 
-          <Tab eventKey="Sales" title="Sales">
+          <Tab eventKey="Sales" title="Sales" style={{color: "white"}}>
+            
             <div>
               <div class='form-group'>
                 <label for='salesID'>Sales ID</label>

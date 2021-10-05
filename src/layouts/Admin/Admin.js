@@ -14,7 +14,6 @@ import logo from "assets/img/react-logo.png";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
 
 import LoginModal from "views/LoginModal";
-import { Alert } from "reactstrap";
 
 var ps;
 

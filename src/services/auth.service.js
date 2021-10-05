@@ -18,46 +18,9 @@ const response = await fetch(API_URL + 'login', requestOptions);
     if (data) {
         localStorage.setItem("user", JSON.stringify(data));
     }
-    //await testGet()
     return response;
 }
 
-// async function testGet() {
-//   const requestOptions = {
-//     method: 'GET',
-//     credentials: 'include',
-//     headers: { 'Content-Type': 'application/json' },
-    
-// };
-// const response = await fetch('https://sisrestapi.herokuapp.com/sales', requestOptions);
-//     const data = await response.json();
-//     console.log(data);
-//     return response;
-// }
-
-// const login = async (username, password) => {
-//   const user_id = username
-//   const response = await axios
-//         .post(API_URL + "login", {
-//             user_id,
-//             password
-//         }, 
-//         {withCredentials: true}
-//         );
-//     if (response.data) {
-//         localStorage.setItem("user", JSON.stringify(response.data));
-//     }
-//     return response;
-// };
-
-// const logout = async () => {
-//   localStorage.removeItem("user");
-//   const response = await axios
-//         .delete(API_URL + "logout", {},
-//         {withCredentials: true}
-//         );
-//         return response;
-//   };
 
 const logout = () => {
   const logoutOptions = {

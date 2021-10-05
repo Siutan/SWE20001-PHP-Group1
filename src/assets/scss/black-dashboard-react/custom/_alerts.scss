@@ -1,6 +1,5 @@
 .alert{
     border: 0;
-    color: $white;
 
     .alert-link{
       color: $white;
@@ -16,7 +15,7 @@
     }
 
     .close{
-        color: $white;
+        color: $black;
         opacity: .9;
         text-shadow: none;
         line-height: 0;
