@@ -1,0 +1,35 @@
+{
+	"set1":
+		[{
+		"id": 1,
+		"labels": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"],
+		"data":  [122, 144, 115, 452, 242, 645, 124, 122, 144, 115, 453, 215]
+		},
+		{
+			"id": 2,
+			"labels": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"],
+			"data":  [500, 25, 4334, 442, 5555, 6145, 1424,1242, 1444, 115, 453, 215]
+		},
+		{
+			"id": 3,
+			"labels": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep"],
+			"data":  [122, 144, 115, 452, 242, 645, 777, 888, 456]
+		}],
+
+		"set2":
+			[{
+			"id": 1,
+			"labels": ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"],
+			"data":  [1200,1350,900,1000,1800,1555,1345]
+			},
+			{
+				"id": 2,
+				"labels": ["July", "Aug", "Sep", "Oct", "Nov", "Dec"],
+				"data":  [500, 25, 4334, 442, 5555, 6214]
+			},
+			{
+				"id": 3,
+				"labels": ["Week 1", "Week 2", "Week 3", "Week 4"],
+				"data":  [12000,13500,16500,11000]
+			}]
+}
