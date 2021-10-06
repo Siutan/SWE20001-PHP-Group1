@@ -41,109 +41,181 @@ function getRandomColor() {
   return color;
 }
 
-function DataEntry(allData){
-  let allSales = [];
-  let yearlySales = ["yearly_sales"];
-  var products = {};
-  let productSales = [];
-  var groups = {};
-  let groupSales = [];
+//Default data returned to all charts if api hasn't loaded
+function DefaultData(){
+  return([{
+    label: "sales",
+    fill: true,
+    borderColor: "#1f8ef1",
+    borderWidth: 2,
+    borderDash: [],
+    borderDashOffset: 0.0,
+    pointBackgroundColor: "#1f8ef1",
+    pointBorderColor: "rgba(255,255,255,0)",
+    pointHoverBackgroundColor: "#1f8ef1",
+    pointBorderWidth: 20,
+    pointHoverRadius: 4,
+    pointHoverBorderWidth: 15,
+    pointRadius: 4,
+    data: [0,0,0,0,0,0,0,0,0,0,0,0],
+  },])
+}
+
+
+///Functions to proccess the complete data and sort into monthly arrays////
+//NOTE: First element of each array will be the dataset title e.g: 'yearlySales' for position [0]////
+
+//Returns a single array with the monthly totals of all products
+function ProcessYearlySales(allData){
+  if (allData.length > 10){
   var date = new Date();
   var year = date.getFullYear();
+  //thisYearSalesData//
+  let yearlySales = ["yearly_sales"];
+  for (let m = 1; m <= 12; m++) {
+    let temp = 0;
+    if (m < 10) {
+      Array.prototype.forEach.call(allData, data => {
+        if (data.date_time.includes(year.toString()+"-0"+(m).toString()+'-')){
+          temp+=(data.product_price*data.quantity_sold);
+        }});
+    }
+    if (m >= 10) {
+      Array.prototype.forEach.call(allData, data => {
+        if (data.date_time.includes(year.toString()+"-"+(m).toString()+'-')){
+          temp+=(data.product_price*data.quantity_sold);
+        }});
+    }
+      if (Math.floor(temp) > 0){
+        yearlySales.push(Math.floor(temp))
+      }
+  }
+
+  return(GraphDataSingle(yearlySales));
+}else{
+  return(DefaultData());
+}
+
+}
+
+
+//Returns an array or arrays, each with the monthly totals of a single product
+function ProcessProductSales(allData){
   if (allData.length > 10){
-    //thisYearSalesData//
-    for (let m = 1; m <= 12; m++) {
-      let temp = 0;
-      if (m < 10) {
-        Array.prototype.forEach.call(allData, data => {
-          if (data.date_time.includes(year.toString()+"-0"+(m).toString()+'-')){
-            temp+=(data.product_price*data.quantity_sold);
-          }});
-      }
-      if (m >= 10) {
-        Array.prototype.forEach.call(allData, data => {
-          if (data.date_time.includes(year.toString()+"-"+(m).toString()+'-')){
-            temp+=(data.product_price*data.quantity_sold);
-          }});
-      }
-        if (Math.floor(temp) > 0){
-          yearlySales.push(Math.floor(temp))
+  var date = new Date();
+  var year = date.getFullYear();
+  var products = {};
+  //ProductSalesData//
+  for (let m = 1; m <= 12; m++) {
+    if (m < 10) {
+      Array.prototype.forEach.call(allData, data => {
+        var productName = data.product_name.toString()
+        var otherName = data.product_name
+        if (!(productName in products)){
+          products[productName] = [productName, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          products[productName][m] = 0;
         }
+        if (data.date_time.includes(year.toString()+"-0"+(m).toString()+'-')){
+          var dataSold = data.product_price*data.quantity_sold;
+          products[productName][m]+=Math.floor(dataSold);
+        }});
     }
-    //ProductSalesData//
-    for (let m = 1; m <= 12; m++) {
-      if (m < 10) {
-        Array.prototype.forEach.call(allData, data => {
-          var productName = data.product_name.toString()
-          var otherName = data.product_name
-          if (!(productName in products)){
-            products[productName] = [productName, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            products[productName][m] = 0;
-          }
-          if (data.date_time.includes(year.toString()+"-0"+(m).toString()+'-')){
-            var dataSold = data.product_price*data.quantity_sold;
-            products[productName][m]+=Math.floor(dataSold);
-          }});
-      }
-      if (m >= 10) {
-        Array.prototype.forEach.call(allData, data => {
-          var productName = data.product_name.toString()
-          if (!(productName in products)){
-            products[productName.key] = [productName, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            products[productName][m] = 0;
-          }
+    if (m >= 10) {
+      Array.prototype.forEach.call(allData, data => {
+        var productName = data.product_name.toString()
+        if (!(productName in products)){
+          products[productName.key] = [productName, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          products[productName][m] = 0;
+        }
 
-          if (data.date_time.includes(year.toString()+"-"+(m).toString()+'-')){
-            var dataSold = data.product_price*data.quantity_sold;
-            products[productName][m]+=Math.floor(dataSold);
-          }});
-      }
+        if (data.date_time.includes(year.toString()+"-"+(m).toString()+'-')){
+          var dataSold = data.product_price*data.quantity_sold;
+          products[productName][m]+=Math.floor(dataSold);
+        }});
     }
-    //ProductGroupsData//
-    for (let m = 1; m <= 12; m++) {
-      if (m < 10) {
-        Array.prototype.forEach.call(allData, data => {
-          var groupName = data.product_group.toString()
-          var otherName = data.product_group
-          if (!(groupName in groups)){
-            groups[groupName] = [groupName, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            groups[groupName][m] = 0;
-          }
-          if (data.date_time.includes(year.toString()+"-0"+(m).toString()+'-')){
-            var dataSold = data.product_price*data.quantity_sold;
-            groups[groupName][m]+=Math.floor(dataSold);
-          }});
-      }
-      if (m >= 10) {
-        Array.prototype.forEach.call(allData, data => {
-          var groupName = data.product_group.toString()
-          if (!(groupName in groups)){
-            groups[groupName.key] = [groupName, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            groups[groupName][m] = 0;
-          }
+  }
+  console.log(products)
+  console.log(Object.values(products))
 
-          if (data.date_time.includes(year.toString()+"-"+(m).toString()+'-')){
-            var dataSold = data.product_price*data.quantity_sold;
-            groups[groupName][m]+=Math.floor(dataSold);
-          }});
-      }
+  return(GraphDataMultiple(Object.values(products)));
+}else{
+  return(DefaultData());
+}
 
+}
+
+//Returns an array or arrays, each with the monthly totals of a single "product_group"
+function ProcessGroupSales(allData){
+  if (allData.length > 10){
+  var date = new Date();
+  var year = date.getFullYear();
+  var groups = {};
+  //ProductGroupsData//
+  for (let m = 1; m <= 12; m++) {
+    if (m < 10) {
+      Array.prototype.forEach.call(allData, data => {
+        var groupName = data.product_group.toString()
+        var otherName = data.product_group
+        if (!(groupName in groups)){
+          groups[groupName] = [groupName, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          groups[groupName][m] = 0;
+        }
+        if (data.date_time.includes(year.toString()+"-0"+(m).toString()+'-')){
+          var dataSold = data.product_price*data.quantity_sold;
+          groups[groupName][m]+=Math.floor(dataSold);
+        }});
+    }
+    if (m >= 10) {
+      Array.prototype.forEach.call(allData, data => {
+        var groupName = data.product_group.toString()
+        if (!(groupName in groups)){
+          groups[groupName.key] = [groupName, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          groups[groupName][m] = 0;
+        }
+
+        if (data.date_time.includes(year.toString()+"-"+(m).toString()+'-')){
+          var dataSold = data.product_price*data.quantity_sold;
+          groups[groupName][m]+=Math.floor(dataSold);
+        }});
     }
 
-    productSales = Object.values(products);
-    groupSales = Object.values(groups);
+  }
+  return(GraphDataMultiple(Object.values(groups)));
+}else{
+  return(DefaultData());
+  }
+}
+//function to return graph "line" data for one array input
+function GraphDataSingle(allSales){
+  var newArray = [];
+  var labelName =  allSales[0];
+  allSales.shift()
+  newArray.push({
+    label: labelName.toString(),
+    fill: true,
+    borderColor: "#1f8ef1",
+    borderWidth: 2,
+    borderDash: [],
+    borderDashOffset: 0.0,
+    pointBackgroundColor: "#1f8ef1",
+    pointBorderColor: "rgba(255,255,255,0)",
+    pointHoverBackgroundColor: "#1f8ef1",
+    pointBorderWidth: 20,
+    pointHoverRadius: 4,
+    pointHoverBorderWidth: 15,
+    pointRadius: 4,
+    data: allSales.map(sale => { if(sale!=0){return sale}  }),
+    // [sales[1],sales[2],sales[3],sales[4],sales[5],sales[6],sales[7],sales[8],sales[9],sales[10],sales[11],sales[12]],
+  },)
 
+  return newArray;
+}
 
-    var tempArray = productSales;
-    tempArray.push(yearlySales);
-    tempArray = tempArray.concat(groupSales);
-    allSales.push(tempArray);
-
-
-
-    var newArray = [];
+//function to return graph line data for multiple arrays input
+function GraphDataMultiple(allSales){
+  var newArray = [];
     var x = 2000
-    Array.prototype.forEach.call(allSales[0], sales => {
+    Array.prototype.forEach.call(allSales, sales => {
       var labelName =  sales[0];
       sales.shift()
       var currentColor = getRandomColor();
@@ -166,34 +238,11 @@ function DataEntry(allData){
       },)
     })
 
-    return(
-      newArray
-    )
-  }
-  else{
-    newArray = [];
-    newArray.push({
-      label: "sales",
-      fill: true,
-      borderColor: "#1f8ef1",
-      borderWidth: 2,
-      borderDash: [],
-      borderDashOffset: 0.0,
-      pointBackgroundColor: "#1f8ef1",
-      pointBorderColor: "rgba(255,255,255,0)",
-      pointHoverBackgroundColor: "#1f8ef1",
-      pointBorderWidth: 20,
-      pointHoverRadius: 4,
-      pointHoverBorderWidth: 15,
-      pointRadius: 4,
-      data: [0,0,0,0,0,0,0,0,0,0,0,0],
-    },)
-    return(newArray)
-  }
-
+  return newArray;
 }
 
 
+//Creates a line chart
 function CreatChart(props){
   return(<Line
     data={
@@ -216,8 +265,9 @@ function CreatChart(props){
 };
 
 
-let afterBurner = [1,2,3]
-
+//Syncs data from api, stores data in local storage,
+//then copies into state variable, only retrieves api data if nothing
+//is in localstorage
 function SyncData(){
 
   const ls = require('localstorage-ttl')
@@ -258,13 +308,16 @@ function SyncData(){
     }
   }
 
-
+  //for the Refresh button, sets local storage to null,
+  //which will run the asyn function getData again
   function resetLocal(){
     ls.set("salesData",null, 60000)
     setHidden(true)
   }
 
-
+  //if page is loaded for first time or refreshed, the loaded variable will
+  //be false, and automatically call the resetLocal function incase there
+  //was something already stored in local storage
   if (!loaded){
     resetLocal()
     loaded = true;
@@ -300,14 +353,83 @@ function SyncData(){
           <div className="chart-area-main">
           <div className="chart-area-body">
 
-
-          <CreatChart dataEntry={DataEntry(hidden)}/>
+          <CreatChart dataEntry={ProcessYearlySales(hidden)}/>
 
           <div id="chartAlpha"></div>
           </div>
           </div>
         </CardBody>
     </Card>
+    <Card className="card-chart">
+    <CardHeader>
+      <Row>
+        <Col className="text-left" sm="6">
+          <h5 className="card-category">Product Sales Comparison</h5>
+          <CardTitle tag="h2">Sales</CardTitle>
+        </Col>
+        <ButtonGroup
+            className="btn-group-toggle float-right"
+            data-toggle="buttons">
+
+        <button color="info"
+                id="1"
+                size="sm"
+                tag="label" className={classNames("btn-simple")} onClick={resetLocal}>
+                <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                  Refresh
+                </span>
+                <span className="d-block d-sm-none">
+                  <i className="tim-icons icon-gift-2" />
+                </span></button>
+        </ButtonGroup>
+      </Row>
+    </CardHeader>
+    <CardBody>
+        <div className="chart-area-main">
+        <div className="chart-area-body">
+
+        <CreatChart dataEntry={ProcessProductSales(hidden)}/>
+
+        <div id="chartAlpha"></div>
+        </div>
+        </div>
+      </CardBody>
+      </Card>
+      <Card className="card-chart">
+      <CardHeader>
+        <Row>
+          <Col className="text-left" sm="6">
+            <h5 className="card-category">Product Group Sales Comparison</h5>
+            <CardTitle tag="h2">Sales</CardTitle>
+          </Col>
+          <ButtonGroup
+              className="btn-group-toggle float-right"
+              data-toggle="buttons">
+
+          <button color="info"
+                  id="1"
+                  size="sm"
+                  tag="label" className={classNames("btn-simple")} onClick={resetLocal}>
+                  <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                    Refresh
+                  </span>
+                  <span className="d-block d-sm-none">
+                    <i className="tim-icons icon-gift-2" />
+                  </span></button>
+          </ButtonGroup>
+        </Row>
+      </CardHeader>
+      <CardBody>
+          <div className="chart-area-main">
+          <div className="chart-area-body">
+
+          <CreatChart dataEntry={ProcessGroupSales(hidden)}/>
+
+          <div id="chartAlpha"></div>
+          </div>
+          </div>
+        </CardBody>
+        </Card>
     </div>
   )
 }
