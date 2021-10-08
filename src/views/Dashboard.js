@@ -12,17 +12,8 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
-  //DropdownToggle,
-  //DropdownMenu,
-  //DropdownItem,
-  //UncontrolledDropdown,
-  //`Label,
-  //FormGroup,
-  //Input,
-  //Table,
   Row,
-  Col,
-  //UncontrolledTooltip,
+  Col
 } from "reactstrap";
 
 // core components

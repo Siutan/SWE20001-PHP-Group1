@@ -6,7 +6,6 @@ import PerfectScrollbar from "perfect-scrollbar";
 // core components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
 
@@ -121,13 +120,7 @@ function Admin(props) {
               </Switch>
             </div>
           </div>
-                 
-           ):(
             <LoginModal showLogin={showLogin}/>
-            
-           )
-           
-          <FixedPlugin bgColor={color} handleBgClick={changeColor} />
         </React.Fragment>
       )}
     </BackgroundColorContext.Consumer>

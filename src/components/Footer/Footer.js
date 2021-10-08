@@ -11,7 +11,7 @@ function Footer() {
         <Nav>
           <NavItem>
             <NavLink href="*">
-              do we need fotter?
+              do we need footer?
             </NavLink>
           </NavItem>
         </Nav>
