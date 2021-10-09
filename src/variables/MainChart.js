@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 // nodejs library that concatenates classes
 import classNames from "classnames";
@@ -19,7 +19,7 @@ import {
   Col
 } from "reactstrap";
 
-var loaded = false;
+
 
 //code sample taken from https://stackoverflow.com/questions/1484506/random-color-generator
 function getRandomColor() {
@@ -380,13 +380,16 @@ function SyncData() {
     setHidden(true);
   }
 
-  //if page is loaded for first time or refreshed, the loaded variable will
-  //be false, and automatically call the resetLocal function incase there
-  //was something already stored in local storage
-  if (!loaded) {
-    resetLocal();
-    loaded = true;
+  //reloads local data after refresh
+  function LoadScreen(){
+    useEffect(() => {
+      resetLocal();
+    }, [])
   }
+  LoadScreen()
+
+
+
 
   return (
     <div>
