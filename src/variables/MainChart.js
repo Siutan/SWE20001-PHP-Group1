@@ -6,8 +6,9 @@ import classNames from "classnames";
 import { Line, Bar } from "react-chartjs-2";
 // Chakra Library
 import { ChakraProvider, Button, ButtonGroup } from '@chakra-ui/react'
-
 import chartOptions1 from "../variables/chartOptions1";
+import WeeklyCharts from "../variables/WeeklyCharts";
+import moment from 'moment';
 
 // reactstrap components
 import {
@@ -19,6 +20,10 @@ import {
   Col
 } from "reactstrap";
 
+const DATEX = new Date();
+const MONTHX = DATEX.getMonth()+1;
+const YEARX = DATEX.getFullYear().toString().substr(2,2);
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 
 //code sample taken from https://stackoverflow.com/questions/1484506/random-color-generator
@@ -60,7 +65,7 @@ function DefaultData() {
 function ProcessYearlySales(allData) {
   if (allData.length > 10) {
     var date = new Date();
-    var year = date.getFullYear();
+
     //thisYearSalesData//
     let yearlySales = ["yearly_sales"];
     for (let m = 1; m <= 12; m++) {
@@ -68,7 +73,7 @@ function ProcessYearlySales(allData) {
       if (m < 10) {
         Array.prototype.forEach.call(allData, (data) => {
           if (
-            data.date_time.includes(year.toString() + "-0" + m.toString() + "-")
+            data.date_time.includes("-0" + m.toString() + "-" + YEARX  )
           ) {
             temp += data.product_price * data.quantity_sold;
           }
@@ -77,7 +82,7 @@ function ProcessYearlySales(allData) {
       if (m >= 10) {
         Array.prototype.forEach.call(allData, (data) => {
           if (
-            data.date_time.includes(year.toString() + "-" + m.toString() + "-")
+            data.date_time.includes("-" + m.toString() + "-" + YEARX  )
           ) {
             temp += data.product_price * data.quantity_sold;
           }
@@ -87,6 +92,7 @@ function ProcessYearlySales(allData) {
         yearlySales.push(Math.floor(temp));
       }
     }
+    console.log(yearlySales)
 
     return GraphDataSingle(yearlySales);
   } else {
@@ -98,7 +104,7 @@ function ProcessYearlySales(allData) {
 function ProcessProductSales(allData) {
   if (allData.length > 10) {
     var date = new Date();
-    var year = date.getFullYear();
+
     var products = {};
     //ProductSalesData//
     for (let m = 1; m <= 12; m++) {
@@ -125,7 +131,7 @@ function ProcessProductSales(allData) {
             products[productName][m] = 0;
           }
           if (
-            data.date_time.includes(year.toString() + "-0" + m.toString() + "-")
+            data.date_time.includes("-0" + m.toString() + "-" + YEARX  )
           ) {
             var dataSold = data.product_price * data.quantity_sold;
             products[productName][m] += Math.floor(dataSold);
@@ -155,7 +161,7 @@ function ProcessProductSales(allData) {
           }
 
           if (
-            data.date_time.includes(year.toString() + "-" + m.toString() + "-")
+            data.date_time.includes("-" + m.toString() + "-" + YEARX  )
           ) {
             var dataSold = data.product_price * data.quantity_sold;
             products[productName][m] += Math.floor(dataSold);
@@ -176,7 +182,7 @@ function ProcessProductSales(allData) {
 function ProcessGroupSales(allData) {
   if (allData.length > 10) {
     var date = new Date();
-    var year = date.getFullYear();
+
     var groups = {};
     //ProductGroupsData//
     for (let m = 1; m <= 12; m++) {
@@ -189,7 +195,7 @@ function ProcessGroupSales(allData) {
             groups[groupName][m] = 0;
           }
           if (
-            data.date_time.includes(year.toString() + "-0" + m.toString() + "-")
+            data.date_time.includes("-0" + m.toString() + "-" + YEARX  )
           ) {
             var dataSold = data.product_price * data.quantity_sold;
             groups[groupName][m] += Math.floor(dataSold);
@@ -219,7 +225,7 @@ function ProcessGroupSales(allData) {
           }
 
           if (
-            data.date_time.includes(year.toString() + "-" + m.toString() + "-")
+            data.date_time.includes("-" + m.toString() + "-" + YEARX  )
           ) {
             var dataSold = data.product_price * data.quantity_sold;
             groups[groupName][m] += Math.floor(dataSold);
@@ -332,15 +338,161 @@ function CreatChart(props) {
   );
 }
 
+
+///All Weekly Sales Functions HERE>///
+//Some functions have been duplicated and altered for weekly
+//Returns a single array with the monthly totals of all products
+function ProcessWeeklySales(allData) {
+  if (allData.length > 10) {
+    var date = new Date();
+    var year = date.getFullYear();
+    //thisYearWeeklySalesData//
+
+    let allWeeklySales = ['Weekly_Sales'];
+    let weeklySales = {};
+    if (allData.length > 10){
+      const groups = allData.reduce((weeklySales, date) => {
+
+      // create a composed key: 'year-week'
+      const yearWeek = `${moment(date.start_of_week).year()}-${moment(date.start_of_week).week()}`;
+
+      // add this key as a property to the result object
+      if (!weeklySales[yearWeek]) {
+        weeklySales[yearWeek] = [];
+      }
+
+      // push the current date that belongs to the year-week calculated befor
+      weeklySales[yearWeek].push(date.start_of_week);
+
+      return weeklySales;
+
+      }, {});
+      const weekKeys = Object.keys(groups);
+
+
+      for (var i=1; i<=52; i++){
+        weeklySales[year.toString()+"-"+i.toString()] = 0;
+      }
+      Array.prototype.forEach.call(weekKeys, (key) => {
+        if (!(key in weeklySales)) {
+          weeklySales[key] = 0;
+        }
+      });
+
+      //code sample taken from https://www.codegrepper.com/code-examples/javascript/js+return+value+through+object+and+find+match+by+key
+      function getKeyByValue(object, value) {
+        for (var key in object){
+          if (object[key].includes(value)) {
+
+            return(key)
+          }
+        // return Object.keys(object).find(key => object[key].value === value);
+        }
+      }
+      Array.prototype.forEach.call(allData, (data) => {
+        let currentKey = getKeyByValue(groups, data.start_of_week.toString())
+
+        weeklySales[currentKey] += Math.floor(data.sales_revenue);
+      });
+
+
+      for (var k in weeklySales){
+        if (!(k.includes(year.toString()))){
+          delete weeklySales[k.toString()]
+        }
+      }
+      allWeeklySales.concat(Object.values(weeklySales))
+      return GraphDataWeeklySingle(allWeeklySales.concat(Object.values(weeklySales)));
+    }
+  }
+}
+
+function GraphDataWeeklySingle(allSales) {
+  var newArray = [];
+  //code taken from https://www.delftstack.com/howto/javascript/javascript-get-week-number/
+  var currentdate = new Date();
+  var oneJan = new Date(currentdate.getFullYear(),0,1);
+  var numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
+  var weekNumber = Math.ceil(( currentdate.getDay() + 1 + numberOfDays) / 7);
+
+
+  var labelName = allSales[0];
+  allSales.shift();
+  newArray.push({
+    label: labelName.toString(),
+    fill: true,
+    borderColor: "#1f8ef1",
+    borderWidth: 2,
+    borderDash: [],
+    borderDashOffset: 0.0,
+    pointBackgroundColor: "#1f8ef1",
+    pointBorderColor: "rgba(255,255,255,0)",
+    pointHoverBackgroundColor: "#1f8ef1",
+    pointBorderWidth: 20,
+    pointHoverRadius: 4,
+    pointHoverBorderWidth: 15,
+    pointRadius: 4,
+    data: allSales.map((sale, index) => {
+      if (index <= weekNumber){
+        return sale;
+      }
+      // if (sale != 0) {
+      //
+      // }
+    }),
+    // [sales[1],sales[2],sales[3],sales[4],sales[5],sales[6],sales[7],sales[8],sales[9],sales[10],sales[11],sales[12]],
+  });
+
+  return newArray;
+}
+
+//Creates a line chart
+function CreatWeeklyChart(props) {
+  const labelNames = [];
+  for (var i = 1; i <=52; i++) {
+    labelNames.push(i.toString())
+  }
+  return (
+    <Line
+      data={(canvas) => {
+        let ctx = canvas.getContext("2d");
+
+        let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+        gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
+        gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
+        gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); //blue colors
+
+        return {
+          labels: labelNames,
+          datasets: props.dataEntry,
+        };
+      }}
+      options={chartOptions1}
+    />
+  );
+}
+
+
+///END WEEKLY SALES FUNCTIONS///
+
+
+
+
 //Syncs data from api, stores data in local storage,
 //then copies into state variable, only retrieves api data if nothing
 //is in localstorage
 function SyncData() {
 
+
   const ls = require("localstorage-ttl");
 
   const apiURL = "https://sisrestapi.herokuapp.com/sales";
   const [hidden, setHidden] = useState([[0], [0]]);
+  const [value, setValue] = useState('');
+
+  const apiWeeklyURL = "https://sisrestapi.herokuapp.com/sales/product/weekly";
+  const [weeklyHidden, setWeeklyHidden] = useState([[0], [0]]);
 
   if (ls.get("salesData") == null) {
     getData();
@@ -351,6 +503,7 @@ function SyncData() {
   async function getData() {
     var x = document.getElementById("chartData1");
     let salesData;
+    let salesWeeklyData;
     let processedData = [1, 2, 3];
 
     try {
@@ -370,7 +523,30 @@ function SyncData() {
     } catch (err) {
       console.log(err);
     }
+
+
+
+    try {
+      await fetch(apiWeeklyURL, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        mode: "cors",
+      })
+        .then((response) => response.json())
+        .then((data) => (salesWeeklyData = data))
+        .then((data) => {
+          ls.set("salesWeeklyData", data, 50000);
+        });
+
+      setWeeklyHidden(ls.get("salesWeeklyData"));
+    } catch (err) {
+      console.log(err);
+    }
+
   }
+
+
 
   //for the Refresh button, sets local storage to null,
   //which will run the async function getData again
@@ -378,6 +554,7 @@ function SyncData() {
     ls.set("salesData", null, 60000);
     console.log("reset local storage")
     setHidden(true);
+    setWeeklyHidden(true);
   }
 
   //reloads local data after refresh
@@ -434,7 +611,7 @@ function SyncData() {
               <CardHeader style={{ backgroundColor: "#1e1e26", borderTopLeftRadius: "10px", borderTopRightRadius: "10px" }}>
                 <Row>
                   <Col className="text-left" sm="6">
-                    <h2 className="card-category">Monthly Total</h2>
+                    <h2 className="card-category">Monthly Total Sales</h2>
                     <CardTitle tag="h2">Sales</CardTitle>
                   </Col>
                 </Row>
@@ -460,7 +637,7 @@ function SyncData() {
               <CardHeader style={{ backgroundColor: "#1e1e26", borderTopLeftRadius: "10px", borderTopRightRadius: "10px"  }}>
                 <Row>
                   <Col className="text-left" sm="6">
-                    <h5 className="card-category">Product Sales Comparison</h5>
+                    <h5 className="card-category">Monthly Product Sales Comparison</h5>
                     <CardTitle tag="h2">Sales</CardTitle>
                   </Col>
                 </Row>
@@ -487,7 +664,7 @@ function SyncData() {
                 <Row>
                   <Col className="text-left" sm="6">
                     <h5 className="card-category">
-                      Product Group Sales Comparison
+                      Monthly Product Group Sales Comparison
                     </h5>
                     <CardTitle tag="h2">Sales</CardTitle>
                   </Col>
@@ -503,10 +680,43 @@ function SyncData() {
                 </div>
               </CardBody>
             </Card>
-          </Card>
+            <Card
+              className="card-chart"
+              style={{
+                backgroundColor: "transparent",
+                padding: "10px",
+                boxShadow: "none",
+              }}
+            >
+
+              <CardHeader style={{ backgroundColor: "#1e1e26", borderTopLeftRadius: "10px", borderTopRightRadius: "10px"  }}>
+                <Row>
+                  <Col className="text-left" sm="6">
+                    <h5 className="card-category">
+                    Weekly Total Sales for {DATEX.getFullYear()}
+                    </h5>
+                    <CardTitle tag="h2">Sales</CardTitle>
+                  </Col>
+                </Row>
+              </CardHeader>
+              <CardBody style={{ backgroundColor: "#1e1e26", borderBottomLeftRadius: "10px", borderBottomRightRadius: "10px"  }}>
+                <div className="chart-area-main">
+                  <div className="chart-area-body">
+                  <CreatWeeklyChart dataEntry={ProcessWeeklySales(weeklyHidden)} />
+
+                    <div id="chartAlpha"></div>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+                </Card>
         </Col>
       </Row>
+
+
       </ChakraProvider>
+
+
     </div>
   );
 }
