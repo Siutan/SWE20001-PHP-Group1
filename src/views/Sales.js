@@ -372,6 +372,19 @@ function Sales() {
                         >
                           Sales Management
                         </Tab>
+                        <Tab
+                          _selected={{
+                            bg: "linear-gradient(to top left, #2381d3 0%, #18a2b9 100%)",
+                          }}
+                          style={{
+                            color: "white",
+                            outline: "none",
+                            border: "none",
+                            boxShadow: "none",
+                          }}
+                        >
+                          Sales Report
+                        </Tab>
                       </TabList>
                     </div>
                     <TabPanels>
@@ -473,6 +486,12 @@ function Sales() {
                           </button>
                         </div>
                       </TabPanel>
+                       <TabPanel>
+                        <div>
+                        <SalesReports />  
+                        </div>
+                      </TabPanel>
+      
                     </TabPanels>
                   </Tabs>
                 </CardBody>
