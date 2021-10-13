@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 import DataTable, { createTheme } from "react-data-table-component";
 import { ChakraProvider } from "@chakra-ui/react";
+import SalesReports from "./SalesReports"
 import {
   Tabs,
   TabList,
@@ -491,7 +492,6 @@ function Sales() {
                         <SalesReports />  
                         </div>
                       </TabPanel>
-      
                     </TabPanels>
                   </Tabs>
                 </CardBody>

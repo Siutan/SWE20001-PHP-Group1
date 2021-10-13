@@ -1,133 +1,221 @@
-import React from "react";
-// nodejs library that concatenates classes
-import classNames from "classnames";
-// react plugin used to create charts
-import { Line, Bar } from "react-chartjs-2";
+import React, { useMemo, useState, useEffect } from "react";
+import { Spinner } from "react-bootstrap";
+import { ChakraProvider } from "@chakra-ui/react";
+import { PieChart } from "react-minimal-pie-chart";
+import {
+  Text,
+  Heading,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatArrow,
+  SimpleGrid,
+  CircularProgress,
+  CircularProgressLabel,
+  Center,
+} from "@chakra-ui/react";
 
 // reactstrap components
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
-  Row,
-  Col
-} from "reactstrap";
+import { Card, CardTitle, CardHeader, CardBody, Row, Col } from "reactstrap";
 
-// core components
-import MainChart from 'variables/MainChart.js'
-import chartOptions1 from "../variables/chartOptions1";
-// import chartOptions3 from "../variables/chartOptions3";
-// import chartOptions4 from "../variables/chartOptions4";
-// import chart1Data from 'variables/chart1Data.js';
-// import Chart2 from 'variables/chart2Data.js';
-// // import Chart3 from 'variables/chart3Data.js';
-// import chart4Data from 'variables/chart4Data.js';
+function EditInput() {
+  // SET URL TO GET SALES ENDPOINT
+  const requestUrl = "https://sisrestapi.herokuapp.com/report/summary";
 
+  // SETS A STATE THAT TELLS THE APP DATA IS BEING LOADED
+  const [loadingData, setLoadingData] = useState(true);
 
-function Dashboard(props) {
+  // SETS A STATE FOR DATA
+  const [data, setData] = useState([]);
 
-  const ls = require('localstorage-ttl')
+  useEffect(() => {
+    const ls = require("localstorage-ttl");
+    const apiWeeklyURL =
+      "https://sisrestapi.herokuapp.com/sales/product/weekly";
 
-  async function fetchSales () {
-  await fetch('https://sisrestapi.herokuapp.com/sales', {
-    method: 'GET',
-    credentials: 'include',
-    mode: 'cors'
-  })
-    .then(response => response.json())
-    .then(data => {
-      ls.set("salesData",data, 60000)
-    })
-}
+    async function getWeeklySales() {
+      await fetch(apiWeeklyURL, {
+        method: "GET",
+        credentials: "include",
+        mode: "cors",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementById("weeklySales").innerHTML = data.length;
+          document.getElementById("weeklyRevenue").innerHTML =
+            "$" + data.length * 19;
+          document.getElementById("weeklyGrowth").innerHTML =
+            "+" + data.length / 12 + "%";
+          document.getElementById("weeklyOrders").innerHTML = Math.floor(
+            data.length / 1.8
+          );
+        });
+    }
 
-  if (ls.get("salesData") == null) {
-    fetchSales()
-    console.log("fetched data = " + ls.get("salesData"))
-  } else{
-    console.log(("cached data = " + ls.get("salesData")))
-  }
+    async function getData() {
+      await fetch(requestUrl, {
+        method: "GET",
+        credentials: "include",
+        mode: "cors",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setData(data);
+          setLoadingData(false); // SWITCHES THE loadingData TO false SO THE APP KNOWS CONTENT IS LOADED
+          document.getElementById("summaryText").innerHTML = data.summary;
+        });
+    }
+    if (loadingData) {
+      // IF loadingData IS true FETCH DATA FROM API
+      getWeeklySales();
+      getData();
+    }
+  }, []);
+
+  const defaultLabelStyle = {
+  fontSize: '5px',
+  fontFamily: 'sans-serif',
+  };
 
   return (
     <>
       <div className="content">
-        <Row>
-          <Col xs="12">
-            <MainChart/>
-          </Col>
-        </Row>
+        <ChakraProvider>
+          <Text
+            bgGradient="linear(to-tl, #2381d3 0%, #18a2b9 100%)"
+            bgClip="text"
+            fontSize="6xl"
+          >
+            DASHBOARD
+          </Text>
+          <Row>
+            <Col md="2">
+              <Card>
+                <CardBody>
+                  <Stat color="white" px="5">
+                    <StatLabel>Weekly Sales</StatLabel>
+                    <StatNumber id="weeklySales" />
+                    <StatHelpText>
+                      <StatArrow type="decrease" />
+                      47.36%
+                    </StatHelpText>
+                    <StatLabel>since last week</StatLabel>
+                  </Stat>
+                </CardBody>
+              </Card>
 
+              <Card>
+                <CardBody>
+                  <Stat color="white" px="5">
+                    <StatLabel>Weekly Revenue</StatLabel>
+                    <StatNumber id="weeklyRevenue" />
+                    <StatHelpText>
+                      <StatArrow type="decrease" />
+                      63%
+                    </StatHelpText>
+                    <StatLabel>since last week</StatLabel>
+                  </Stat>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col md="2">
+              <Card>
+                <CardBody>
+                  <Stat color="white" px="5">
+                    <StatLabel>Weekly Orders</StatLabel>
+                    <StatNumber id="weeklyOrders" />
+                    <StatHelpText>
+                      <StatArrow type="increase" />
+                      8.27%
+                    </StatHelpText>
+                    <StatLabel>since last week</StatLabel>
+                  </Stat>
+                </CardBody>
+              </Card>
+
+              <Card>
+                <CardBody>
+                  <Stat color="white" px="5">
+                    <StatLabel>Weekly Growth</StatLabel>
+                    <StatNumber id="weeklyGrowth" />
+                    <StatHelpText>
+                      <StatArrow type="increase" />
+                      2.28%
+                    </StatHelpText>
+                    <StatLabel>since last week</StatLabel>
+                  </Stat>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col md="8">
+              <Card>
+                <CardBody>
+                  <SimpleGrid minChildWidth="120px" spacing="40px">
+                    <div className="font-icon-detail" borderColor="blue">
+                      <Text>Put sales graph here :)</Text>
+                    </div>
+                  </SimpleGrid>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+          <Row>
+            <Col md="12"></Col>
+            <Col md="8">
+              <Text
+            bgGradient="linear(to-tl, #2381d3 0%, #18a2b9 100%)"
+            bgClip="text"
+            fontSize="6xl"
+          >
+            SALES SUMMARY
+          </Text>
+              {loadingData ? ( // CHECK IF loadingData IS true
+                <div className="d-flex justify-content-center">
+                  <h1>
+                    <Spinner animation="border" /> Loading (If data isnt
+                    Loading, Please log in again)...
+                  </h1>
+                </div>
+              ) : (
+                // IF loadingData IS flase DISPLAY TABLE
+                <div>
+                  <Card>
+                    <CardBody>
+                      <Text
+                        id="summaryText"
+                        bgGradient="linear(to-tl, #2381d3 0%, #18a2b9 100%)"
+                        bgClip="text"
+                        fontSize="3xl"
+                      />
+                    </CardBody>
+                  </Card>
+                </div>
+              )}
+            </Col>
+            <Col md="4">
+              <Text
+            bgGradient="linear(to-tl, #2381d3 0%, #18a2b9 100%)"
+            bgClip="text"
+            fontSize="6xl"
+          >
+            WEEKLY TARGET
+          </Text>
+              <Card>
+                <CardBody>
+                  <Center>
+                    <CircularProgress value={40} size="225" color="#267cd8">
+                    <CircularProgressLabel color="white">40%</CircularProgressLabel>
+                  </CircularProgress>
+                  </Center>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </ChakraProvider>
       </div>
     </>
   );
 }
 
-export default Dashboard;
-
-
-// <Row>
-//   <Col lg="4">
-//     <Card className="card-chart">
-//       <CardHeader>
-//         <h5 className="card-category">Predicted Sales of </h5>
-//         <CardTitle tag="h3">
-//           <i className="tim-icons icon-bell-55 text-info" />
-//           <select>
-//             ;<option value='' disabled selected>
-//                     Select Product
-//                   </option>
-//                   ;<option value=''>
-//                     Product 1
-//                   </option>
-//                   ;<option value='' >
-//                     Product 2
-//                   </option>
-//                   ;<option value='' >
-//                     Product 3
-//                   </option>
-//
-//           </select>
-//         </CardTitle>
-//       </CardHeader>
-//       <CardBody>
-//         <Chart2/>
-//       </CardBody>
-//     </Card>
-//   </Col>
-//   <Col lg="4">
-//     <Card className="card-chart">
-//       <CardHeader>
-//         <h5 className="card-category">Daily Sales</h5>
-//         <CardTitle tag="h3">
-//           <i className="tim-icons icon-delivery-fast text-primary" />{" "}
-//           3,500€
-//         </CardTitle>
-//       </CardHeader>
-//       <CardBody>
-//         <h1>placeholder</h1>
-//       </CardBody>
-//     </Card>
-//   </Col>
-//   <Col lg="4">
-//     <Card className="card-chart">
-//       <CardHeader>
-//         <h5 className="card-category">Completed Tasks</h5>
-//         <CardTitle tag="h3">
-//           <i className="tim-icons icon-send text-success" /> 12,100K
-//         </CardTitle>
-//       </CardHeader>
-//       <CardBody>
-//         <div className="chart-area">
-//           <Line
-//             data={chart4Data.data}
-//             options={chartOptions4}
-//           />
-//         </div>
-//       </CardBody>
-//     </Card>
-//   </Col>
-// </Row>
-// <Row>
-// </Row>
+export default EditInput;

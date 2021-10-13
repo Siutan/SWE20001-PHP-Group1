@@ -19,6 +19,8 @@ import { Card, CardBody, Row, Col } from "reactstrap";
 // TODO:
 //  REMOVE EXPORT CSV IN INVENTORY
 //  ADD TABBED LAYOUT WITH INVENTORY ACTIONS
+//  CHANGE INVENTORY MANAGEMENT FOR NEW QUERY. (SEND POST REQUEST TO INVENTORY
+//  ENDPOINT AND CHANGE FORM)
 
 //INVENTORY
 function addInventory() {
@@ -126,39 +128,8 @@ function Inventory() {
       reorder: true,
     },
     {
-      name: "Product Name",
-      selector: (row) => row.product_name,
-      reorder: true,
-    },
-    {
-      name: "Product Group",
-      selector: (row) => row.product_group,
-      reorder: true,
-    },
-    {
-      name: "Product Description",
-      selector: (row) => row.product_description,
-      reorder: true,
-    },
-    {
-      name: "Product Price",
-      selector: (row) => row.product_price,
-      reorder: true,
-    },
-    {
-      name: "Update Index",
-      selector: (row) => row.update_index,
-      reorder: true,
-    },
-    {
       name: "Current Stock",
       selector: (row) => row.current_stock,
-      reorder: true,
-    },
-    {
-      name: "Max Stock Capacity",
-      selector: (row) => row.max_stock_capacity,
-      sortable: true,
       reorder: true,
     },
     {

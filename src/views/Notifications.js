@@ -1,224 +1,222 @@
-import React from "react";
-// react plugin for creating notifications over the dashboard
-import NotificationAlert from "react-notification-alert";
+import React, { useMemo, useState, useEffect } from 'react'
+import { Spinner } from 'react-bootstrap'
+import { ChakraProvider } from '@chakra-ui/react'
+import { PieChart } from 'react-minimal-pie-chart'
+import {
+  Text,
+  Heading,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatArrow,
+  SimpleGrid,
+  CircularProgress,
+  CircularProgressLabel,
+  Center
+} from '@chakra-ui/react'
 
 // reactstrap components
-import {
-  Alert,
-  UncontrolledAlert,
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
-  Row,
-  Col,
-} from "reactstrap";
+import { Card, CardTitle, CardHeader, CardBody, Row, Col } from 'reactstrap'
 
-function Notifications() {
-  const notificationAlertRef = React.useRef(null);
-  //popup function for testing, generates a notification of random color.
-  const notify = (place) => {
-    var color = Math.floor(Math.random() * 5 + 1);
-    var type;
-    switch (color) {
-      case 1:
-        type = "primary";
-        break;
-      case 2:
-        type = "success";
-        break;
-      case 3:
-        type = "danger";
-        break;
-      case 4:
-        type = "warning";
-        break;
-      case 5:
-        type = "info";
-        break;
-      default:
-        break;
+function Dashboard () {
+  // SET URL TO GET SALES ENDPOINT
+  const requestUrl = 'https://sisrestapi.herokuapp.com/report/summary'
+
+  // SETS A STATE THAT TELLS THE APP DATA IS BEING LOADED
+  const [loadingData, setLoadingData] = useState(true)
+
+  // SETS A STATE FOR DATA
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    const ls = require('localstorage-ttl')
+    const apiWeeklyURL = 'https://sisrestapi.herokuapp.com/sales/product/weekly'
+
+    async function getWeeklySales () {
+      await fetch(apiWeeklyURL, {
+        method: 'GET',
+        credentials: 'include',
+        mode: 'cors'
+      })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('weeklySales').innerHTML = data.length
+          document.getElementById('weeklyRevenue').innerHTML =
+            '$' + data.length * 19
+          document.getElementById('weeklyGrowth').innerHTML =
+            '+' + data.length / 12 + '%'
+          document.getElementById('weeklyOrders').innerHTML = Math.floor(
+            data.length / 1.8
+          )
+        })
     }
-    var options = {};
-    options = {
-      place: place,
-      // Message to show in the notification
-      message: (
-        <div>
-          <div>
-          <b>WARNING</b> - I have no idea what im doing.
-          </div>
-        </div>
-      ),
-      type: type,
-      icon: "tim-icons icon-bell-55",
-      autoDismiss: 3,
-    };
-    notificationAlertRef.current.notificationAlert(options);
-  };
+
+    async function getData () {
+      await fetch(requestUrl, {
+        method: 'GET',
+        credentials: 'include',
+        mode: 'cors'
+      })
+        .then(response => response.json())
+        .then(data => {
+          setData(data)
+          setLoadingData(false) // SWITCHES THE loadingData TO false SO THE APP KNOWS CONTENT IS LOADED
+          document.getElementById('summaryText').innerHTML = data.summary
+        })
+    }
+    if (loadingData) {
+      // IF loadingData IS true FETCH DATA FROM API
+      getWeeklySales()
+      getData()
+    }
+  }, [])
+
+  const defaultLabelStyle = {
+    fontSize: '5px',
+    fontFamily: 'sans-serif'
+  }
+
   return (
     <>
-      <div className="content">
-        <div className="react-notification-alert-container">
-          <NotificationAlert ref={notificationAlertRef} />
-        </div>
-        <Row>
-          <Col md="6">
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Notifications Style</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <Alert color="info">
-                  <span>This is a plain notification</span>
-                </Alert>
-                <UncontrolledAlert color="info">
-                  <span>This is a notification with close button.</span>
-                </UncontrolledAlert>
-                <UncontrolledAlert className="alert-with-icon" color="info">
-                  <span className="tim-icons icon-bell-55" data-notify="icon" />
-                  <span data-notify="message">
-                    This is a notification with close button and icon.
-                  </span>
-                </UncontrolledAlert>
-                <UncontrolledAlert className="alert-with-icon" color="info">
-                  <span className="tim-icons icon-bell-55" data-notify="icon" />
-                  <span data-notify="message">
-                    This is a notification with close button and icon and have
-                    many lines. You can see that the icon and the close button
-                    are always vertically aligned. This is a beautiful
-                    notification. So you don't have to worry about the style.
-                  </span>
-                </UncontrolledAlert>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col md="6">
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Notification states</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <UncontrolledAlert color="primary">
-                  <span>
-                    <b>Primary - </b>
-                    This is a notification made with ".alert-primary" for basic notifications
-                  </span>
-                </UncontrolledAlert>
-                <UncontrolledAlert color="info">
-                  <span>
-                    <b>Info - </b>
-                    This is a regular notification made with ".alert-info" for info notifications
-                  </span>
-                </UncontrolledAlert>
-                <UncontrolledAlert color="success">
-                  <span>
-                    <b>Success - </b>
-                    This is a regular notification made with ".alert-success" for success actions
-                  </span>
-                </UncontrolledAlert>
-                <UncontrolledAlert color="warning">
-                  <span>
-                    <b>Warning - </b>
-                    This is a regular notification made with ".alert-warning" for warning actions
-                  </span>
-                </UncontrolledAlert>
-                <UncontrolledAlert color="danger">
-                  <span>
-                    <b>Danger - </b>
-                    This is a regular notification made with ".alert-danger" for failed actions
-                  </span>
-                </UncontrolledAlert>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col md="12">
-            <Card>
-              <CardBody>
-                <div className="places-buttons">
-                  <Row>
-                    <Col className="ml-auto mr-auto text-center" md="6">
-                      <CardTitle tag="h4">
-                        Notifications Places
-                        <p className="category">Click to view notifications</p>
-                      </CardTitle>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="ml-auto mr-auto" lg="8">
-                      <Row>
-                        <Col md="4">
-                          <Button
-                            block
-                            color="primary"
-                            onClick={() => notify("tl")}
-                          >
-                            Top Left
-                          </Button>
-                        </Col>
-                        <Col md="4">
-                          <Button
-                            block
-                            color="primary"
-                            onClick={() => notify("tc")}
-                          >
-                            Top Center
-                          </Button>
-                        </Col>
-                        <Col md="4">
-                          <Button
-                            block
-                            color="primary"
-                            onClick={() => notify("tr")}
-                          >
-                            Top Right
-                          </Button>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="ml-auto mr-auto" lg="8">
-                      <Row>
-                        <Col md="4">
-                          <Button
-                            block
-                            color="primary"
-                            onClick={() => notify("bl")}
-                          >
-                            Bottom Left
-                          </Button>
-                        </Col>
-                        <Col md="4">
-                          <Button
-                            block
-                            color="primary"
-                            onClick={() => notify("bc")}
-                          >
-                            Bottom Center
-                          </Button>
-                        </Col>
-                        <Col md="4">
-                          <Button
-                            block
-                            color="primary"
-                            onClick={() => notify("br")}
-                          >
-                            Bottom Right
-                          </Button>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
+      <div className='content'>
+        <ChakraProvider>
+          <Text
+            bgGradient='linear(to-tl, #2381d3 0%, #18a2b9 100%)'
+            bgClip='text'
+            fontSize='6xl'
+          >
+            DASHBOARD
+          </Text>
+          <Row>
+            <Col md='2'>
+              <Card>
+                <CardBody>
+                  <Stat color='white' px='5'>
+                    <StatLabel>Weekly Sales</StatLabel>
+                    <StatNumber id='weeklySales' />
+                    <StatHelpText>
+                      <StatArrow type='decrease' />
+                      47.36%
+                    </StatHelpText>
+                    <StatLabel>since last week</StatLabel>
+                  </Stat>
+                </CardBody>
+              </Card>
+
+              <Card>
+                <CardBody>
+                  <Stat color='white' px='5'>
+                    <StatLabel>Weekly Revenue</StatLabel>
+                    <StatNumber id='weeklyRevenue' />
+                    <StatHelpText>
+                      <StatArrow type='decrease' />
+                      63%
+                    </StatHelpText>
+                    <StatLabel>since last week</StatLabel>
+                  </Stat>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col md='2'>
+              <Card>
+                <CardBody>
+                  <Stat color='white' px='5'>
+                    <StatLabel>Weekly Orders</StatLabel>
+                    <StatNumber id='weeklyOrders' />
+                    <StatHelpText>
+                      <StatArrow type='increase' />
+                      8.27%
+                    </StatHelpText>
+                    <StatLabel>since last week</StatLabel>
+                  </Stat>
+                </CardBody>
+              </Card>
+
+              <Card>
+                <CardBody>
+                  <Stat color='white' px='5'>
+                    <StatLabel>Weekly Growth</StatLabel>
+                    <StatNumber id='weeklyGrowth' />
+                    <StatHelpText>
+                      <StatArrow type='increase' />
+                      2.28%
+                    </StatHelpText>
+                    <StatLabel>since last week</StatLabel>
+                  </Stat>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col md='8'>
+              <Card>
+                <CardBody>
+                  <SimpleGrid minChildWidth='120px' spacing='40px'>
+                    <div className='font-icon-detail' borderColor='blue'>
+                      <Text>Put sales graph here :)</Text>
+                    </div>
+                  </SimpleGrid>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+          <Row>
+            <Col md='12'></Col>
+            <Col md='8'>
+              <Text
+                bgGradient='linear(to-tl, #2381d3 0%, #18a2b9 100%)'
+                bgClip='text'
+                fontSize='6xl'
+              >
+                SALES SUMMARY
+              </Text>
+              {loadingData ? ( // CHECK IF loadingData IS true
+                <div className='d-flex justify-content-center'>
+                  <h1>
+                    <Spinner animation='border' /> Loading (If data isnt
+                    Loading, Please log in again)...
+                  </h1>
                 </div>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
+              ) : (
+                // IF loadingData IS flase DISPLAY TABLE
+                <div>
+                  <Card>
+                    <CardBody>
+                      <Text
+                        id='summaryText'
+                        bgGradient='linear(to-tl, #2381d3 0%, #18a2b9 100%)'
+                        bgClip='text'
+                        fontSize='3xl'
+                      />
+                    </CardBody>
+                  </Card>
+                </div>
+              )}
+            </Col>
+            <Col md='4'>
+              <Text
+                bgGradient='linear(to-tl, #2381d3 0%, #18a2b9 100%)'
+                bgClip='text'
+                fontSize='6xl'
+              >
+                WEEKLY TARGET
+              </Text>
+              <Card>
+                <CardBody>
+                  <Center>
+                    <CircularProgress value={40} size='225' color='#267cd8'>
+                      <CircularProgressLabel color='white'>
+                        40%
+                      </CircularProgressLabel>
+                    </CircularProgress>
+                  </Center>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </ChakraProvider>
       </div>
     </>
-  );
+  )
 }
 
-export default Notifications;
+export default Dashboard

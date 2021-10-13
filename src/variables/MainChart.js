@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
@@ -702,7 +701,7 @@ function SyncData() {
         .then((response) => response.json())
         .then((data) => (salesWeeklyData = data))
         .then((data) => {
-          ls.set("salesWeeklyData", data, 50000);
+          ls.set("salesWeeklyData", data, 60000);
         });
 
       setWeeklyHidden(ls.get("salesWeeklyData"));

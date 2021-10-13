@@ -1,8 +1,6 @@
 import Dashboard from "views/Dashboard.js";
-import Icons from "views/Icons.js";
-import Notifications from "views/Notifications.js";
+import Analytics from "views/Analytics.js";
 import Inventory from "views/Inventory.js";
-import EditInput from "views/Edit-Input.js";
 import Sales from "views/Sales";
 import Accounts from "views/Users"
 import Products from "views/Products"
@@ -10,30 +8,16 @@ import Products from "views/Products"
 var routes = [
   {
     path: "/dashboard",
-    name: "Charts",
-    icon: "tim-icons icon-chart-bar-32",
+    name: "Dashboard",
+    icon: "tim-icons icon-badge",
     component: Dashboard,
     layout: "/admin",
   },
   {
-    path: "/dev-stuff",
-    name: "Dev-Stuff",
-    icon: "tim-icons icon-atom",
-    component: Icons,
-    layout: "/admin",
-  },
-  {
-    path: "/notifications",
-    name: "Notification Popups",
-    icon: "tim-icons icon-bell-55",
-    component: Notifications,
-    layout: "/admin",
-  },
-  {
-    path: "/edit-input",
-    name: "Management",
-    icon: "tim-icons icon-single-02",
-    component: EditInput,
+    path: "/analytics",
+    name: "Analyticcs",
+    icon: "tim-icons icon-chart-bar-32",
+    component: Analytics,
     layout: "/admin",
   },
   {
