@@ -169,8 +169,12 @@ function GraphDataWeeklySingle(allSales) {
 
 //Creates a line chart
 function CreatWeeklyChart(props) {
+  var currentdate = new Date();
+  var oneJan = new Date(currentdate.getFullYear(),0,1);
+  var numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
+  var weekNumber = Math.ceil(( currentdate.getDay() + 1 + numberOfDays) / 7);
   const labelNames = [];
-  for (var i = 1; i <=52; i++) {
+  for (var i = 1; i <=weekNumber+1; i++) {
     labelNames.push(i.toString())
   }
   return (
@@ -267,19 +271,8 @@ function SyncData() {
 
 
   return (
-    <div>
-
-
-
-
-
-                  <CreatWeeklyChart dataEntry={ProcessWeeklySales(weeklyHidden)} />
-
-
-
-
-
-
+    <div className="chart-area-main">
+        <CreatWeeklyChart dataEntry={ProcessWeeklySales(weeklyHidden)} />
     </div>
   );
 }
