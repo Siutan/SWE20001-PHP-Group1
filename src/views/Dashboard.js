@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 import { ChakraProvider } from "@chakra-ui/react";
 import { PieChart } from "react-minimal-pie-chart";
+import SingleChart from 'variables/SingleChart.js'
 import {
   Text,
   Heading,
@@ -153,7 +154,7 @@ function EditInput() {
                 <CardBody>
                   <SimpleGrid minChildWidth="120px" spacing="40px">
                     <div className="font-icon-detail" borderColor="blue">
-                      <Text>Put sales graph here :)</Text>
+                      <SingleChart/>
                     </div>
                   </SimpleGrid>
                 </CardBody>
