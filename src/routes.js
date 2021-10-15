@@ -2,7 +2,7 @@ import Dashboard from "views/Dashboard.js";
 import Analytics from "views/Analytics.js";
 import Inventory from "views/Inventory.js";
 import Sales from "views/Sales";
-import Accounts from "views/Users"
+import Accounts from "views/Accounts"
 import Products from "views/Products"
 
 var routes = [

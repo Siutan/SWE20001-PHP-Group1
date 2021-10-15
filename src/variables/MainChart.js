@@ -62,7 +62,6 @@ function DefaultData() {
 
 //Returns a single array with the monthly totals of all products
 function ProcessYearlySales(allData) {
-  console.log("running Process Yearly Sales")
   if (allData.length > 10) {
     var date = new Date();
 
@@ -92,7 +91,6 @@ function ProcessYearlySales(allData) {
         yearlySales.push(Math.floor(temp));
       }
     }
-    console.log(yearlySales)
 
     return GraphDataSingle(yearlySales);
   } else {
@@ -394,8 +392,6 @@ function ProcessWeeklySales(allData) {
         weeklySales[currentKey] += Math.floor(data.sales_revenue);
       });
 
-      console.log(allData)
-
       for (var k in weeklySales){
         if (!(k.includes(year.toString()))){
           delete weeklySales[k.toString()]
@@ -452,8 +448,6 @@ function ProcessWeeklyProductSales(allData) {
     finalGroups.push(Object.values(arr))
   })
 
-  console.log(finalGroups)
-  console.log(products)
   return GraphDataWeeklyMultiple(finalGroups);
 }
 
@@ -659,10 +653,6 @@ function SyncData() {
 
   if (ls.get("salesData") == null) {
     getData();
-    console.log("null confirmed, getting Data")
-    //console.log("fetched data = " + ls.get("salesData"))
-  } else {
-    //console.log(("cached data = " + ls.get("salesData")))
   }
   async function getData() {
     var x = document.getElementById("chartData1");
@@ -683,10 +673,8 @@ function SyncData() {
           ls.set("salesData", data, 60000);
         });
 
-      console.log("setting hidden")
       setHidden(ls.get("salesData"));
     } catch (err) {
-      console.log(err);
     }
 
 
@@ -706,7 +694,6 @@ function SyncData() {
 
       setWeeklyHidden(ls.get("salesWeeklyData"));
     } catch (err) {
-      console.log(err);
     }
 
   }
@@ -717,7 +704,6 @@ function SyncData() {
   //which will run the async function getData again
   function resetLocal() {
     ls.set("salesData", null, 60000);
-    console.log("reset local storage")
     setHidden(true);
     setWeeklyHidden(true);
   }

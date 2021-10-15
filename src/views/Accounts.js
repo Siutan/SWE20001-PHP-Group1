@@ -9,147 +9,166 @@ import {
  Tab,
  TabPanel,
  Input,
- InputGroup,
+ InputRightElement,
+ Button,
  Stack,
+ InputGroup,
+ Radio,
+ RadioGroup,
 } from "@chakra-ui/react";
 
 // reactstrap components
 import { Card, CardBody, Row, Col } from "reactstrap";
 
-// TODO:
-//  REMOVE EXPORT CSV IN INVENTORY
-//  ADD TABBED LAYOUT WITH INVENTORY ACTIONS
-//  CHANGE INVENTORY MANAGEMENT FOR NEW QUERY. (SEND POST REQUEST TO INVENTORY
-//  ENDPOINT AND CHANGE FORM)
+//TODO: add search filter to search users in table by first name
 
-//INVENTORY
-function addInventory() {
- var productId = document.getElementById("pID_inventory").value;
- var maxStock = document.getElementById("maxStock_inventory").value;
- var currentStock = document.getElementById("currentStock_inventory").value;
- var date = document.getElementById("date_inventory").value;
+//ADD ACCOUNT
+function register() {
+ var firstname = document.getElementById("firstName").value;
+ var lastname = document.getElementById("lastName").value;
+ var password = document.getElementById("password_register").value;
+
+ if (document.getElementById("admin_User").checked) {
+  var admin = true;
+ } else if (document.getElementById("regular_User").checked) {
+  var admin = false;
+ }
 
  const payload = {
-  product_id: parseInt(productId),
-  max_stock_capacity: parseInt(maxStock),
-  current_stock: parseInt(currentStock),
-  date_time: date,
+  first_name: firstname,
+  last_name: lastname,
+  admin: admin,
+  password: password,
  };
- if (productId === "") {
-  alert("Enter Product ID");
+ var r = window.confirm(
+  `do you want to Register the following User \n
+    First Name: ${firstname} \n
+    Last Name: ${lastname} \n
+    Admin: ${admin} \n
+    Password: ${password}`
+ );
+
+ if (r === true) {
+  fetch("https://sisrestapi.herokuapp.com/auth/register", {
+   method: "POST",
+   credentials: "include",
+   headers: { "Content-Type": "application/json" },
+   body: JSON.stringify(payload),
+  });
+  alert("Added new User successfully");
  } else {
-  var r =
-   window.confirm(`do you want to ADD the following entry to Inventory: \n
-    Product ID: ${productId} \n
-    Max Stock Capacity: ${maxStock} \n
-    Current Stock: ${currentStock} \n
-    Date: ${date} \n`);
+  alert("Did not add New User");
+ }
+}
+
+//EDIT ACCOUNT
+function editAccount() {
+ var userId = document.getElementById("userId").value;
+ var firstname = document.getElementById("firstName_edit").value;
+ var lastname = document.getElementById("lastName_edit").value;
+ var password = document.getElementById("password_edit").value;
+
+ if (document.getElementById("admin_User_edit").checked) {
+  var admin = true;
+ } else if (document.getElementById("regular_User_edit").checked) {
+  var admin = false;
+ }
+ const payload = {
+  first_name: firstname,
+  last_name: lastname,
+  admin: admin,
+  password: password,
+ };
+ if (userId === "") {
+  alert("enter user Id of the account you want to update");
+ } else {
+  var r = window.confirm("do you want to Update the User records");
+
   if (r === true) {
-   fetch("https://sisrestapi.herokuapp.com/inventory", {
-    method: "POST",
+   fetch("https://sisrestapi.herokuapp.com/users/" + userId, {
+    method: "PATCH",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
    });
-   alert("entry has been added");
+   alert("Updated User successfully");
   } else {
-   alert("Entry not added");
+   alert("Did not Update User");
   }
  }
 }
 
-function editInventory() {
- var productId = document.getElementById("pID_inventory").value;
- var maxStock = document.getElementById("maxStock_inventory").value;
- var currentStock = document.getElementById("currentStock_inventory").value;
- var date = document.getElementById("date_inventory").value;
-
- const payload = {
-  product_id: parseInt(productId),
-  max_stock_capacity: parseInt(maxStock),
-  current_stock: parseInt(currentStock),
-  date_time: date,
- };
- if (productId === "") {
-  alert("Enter Update Index");
+//DELETE ACCOUNT
+function deleteAccount() {
+ var userId = document.getElementById("userId").value;
+ if (userId === "") {
+  alert("enter user Id of the account you want to delete");
  } else {
-  var r = window.confirm(
-   "do you want to Edit the following entry in Inventory"
-  );
-  if (r === true) {
-   fetch("https://sisrestapi.herokuapp.com/inventory/", {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-   });
-   alert("entry has been updated");
-  } else {
-   alert("Entry not Updated");
-  }
- }
-}
+  var r = window.confirm(`do you want to Update the User records`);
 
-function deleteInventory() {
- var updateIndex = document.getElementById("updateIndex").value;
-
- if (updateIndex === "") {
-  alert("Enter Update Index");
- } else {
-  var r = window.confirm(
-   "do you want to DELETE the following entry in Inventory"
-  );
   if (r === true) {
-   fetch("https://sisrestapi.herokuapp.com/inventory/" + updateIndex, {
+   fetch("https://sisrestapi.herokuapp.com/users/" + userId, {
     method: "DELETE",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
    });
-   alert("entry has been Deleted");
+   alert("Deleted User successfully");
   } else {
-   alert("Entry not Deleted");
+   alert("Did not Delete User");
   }
  }
 }
 
-const requestUrl = "https://sisrestapi.herokuapp.com/inventory";
+function Accounts() {
+ //User Url
+ const requestUrl = "https://sisrestapi.herokuapp.com/users";
 
-function Inventory() {
  // SETS A STATE THAT TELLS THE APP DATA IS BEING LOADED
  const [loadingData, setLoadingData] = useState(true);
 
- // COLUMN FOR INVENTORY TABLE
+ // COLUMN FOR PRODUCT TABLE
  const columns = useMemo(() => [
   {
-   name: "Product ID",
-   selector: (row) => row.product_id,
+   name: "User ID",
+   selector: (row) => row.user_id,
    sortable: true,
    reorder: true,
   },
   {
-   name: "Current Stock",
-   selector: (row) => row.current_stock,
+   name: "First Name",
+   selector: (row) => row.first_name,
    reorder: true,
   },
   {
-   name: "Date/Time",
-   selector: (row) => row.date_time,
-   sortable: true,
+   name: "Last Name",
+   selector: (row) => row.last_name,
    reorder: true,
+  },
+  {
+   name: "Account Type",
+   selector: (row) => {
+    if (row.admin === 1) {
+     return "Admin";
+    } else {
+     return "User";
+    }
+   },
+   reorder: true,
+   sortable: true,
   },
  ]);
-
+ // SETS A STATE FOR DATA
  const [data, setData] = useState([]);
 
  useEffect(() => {
   const ls = require("localstorage-ttl");
 
   async function checkls() {
-   if (ls.get("inventoryData") === null) {
+   if (ls.get("userData") == null) {
     getData();
    } else {
-    const inventoryData = ls.get("inventoryData");
-    setData(inventoryData);
+    const userData = ls.get("userData");
+    setData(userData);
     setLoadingData(false);
    }
   }
@@ -162,7 +181,7 @@ function Inventory() {
     .then((response) => response.json())
     .then((data) => {
      setData(data);
-     ls.set("inventoryData", data, 60000);
+     ls.set("userData", data, 60000);
      setLoadingData(false); // SWITCHES THE loadingData TO false SO THE APP KNOWS CONTENT IS LOADED
     });
   }
@@ -224,6 +243,11 @@ function Inventory() {
   },
  };
 
+ const [value, setValue] = React.useState("1");
+
+ const [show, setShow] = React.useState(false);
+ const handleClick = () => setShow(!show);
+
  return (
   <>
    <div className="content">
@@ -233,12 +257,7 @@ function Inventory() {
        <Card>
         <CardBody>
          <Tabs variant="soft-rounded" size="md" isFitted defaultIndex={0}>
-          <div
-           style={{
-            backgroundColor: "#1e1e26",
-            borderRadius: "100px",
-           }}
-          >
+          <div style={{ backgroundColor: "#1e1e26", borderRadius: "100px" }}>
            <TabList>
             <Tab
              _selected={{
@@ -247,11 +266,10 @@ function Inventory() {
              style={{
               color: "white",
               outline: "none",
-              border: "none",
               boxShadow: "none",
              }}
             >
-             Inventory Records
+             Admin/User Records
             </Tab>
             <Tab
              _selected={{
@@ -260,19 +278,20 @@ function Inventory() {
              style={{
               color: "white",
               outline: "none",
-              border: "none",
               boxShadow: "none",
              }}
             >
-             Inventory Management
+             Account Management
             </Tab>
            </TabList>
           </div>
+
           <TabPanels>
            <TabPanel>
             {loadingData ? ( // CHECK IF loadingData IS true
              <div class="d-flex justify-content-center">
               <h1>
+               {" "}
                <Spinner animation="border" /> Loading (If data isnt Loading,
                Please log in again)...
               </h1>
@@ -280,7 +299,7 @@ function Inventory() {
             ) : (
              // IF loadingData IS flase DISPLAY TABLE
              <DataTable
-              title="Inventory Table"
+              title="Users Table"
               columns={columns}
               data={data}
               pagination
@@ -291,69 +310,79 @@ function Inventory() {
             )}
            </TabPanel>
            <TabPanel>
-            <div>
+            <div class="form-group">
              <Stack spacing={10} style={{ color: "white" }}>
               <InputGroup style={{ marginTop: "20px" }}>
                <Input
                 variant="filled"
                 style={{ backgroundColor: "#1e1e26" }}
-                placeholder="Update Index"
+                placeholder="User ID"
                 type="Number"
-                id="updateIndex"
+                id="userId"
                />
               </InputGroup>
               <InputGroup>
                <Input
                 variant="filled"
                 style={{ backgroundColor: "#1e1e26" }}
-                placeholder="Product ID"
+                placeholder="First Name"
                 type="text"
-                id="pID_inventory"
+                id="firstName_edit"
                />
               </InputGroup>
               <InputGroup>
                <Input
                 variant="filled"
                 style={{ backgroundColor: "#1e1e26" }}
-                placeholder="Max Stock"
+                placeholder="Last Name"
                 type="Text"
-                id="maxStock_inventory"
+                id="lastName_edit"
                />
               </InputGroup>
-              <InputGroup>
+
+              <InputGroup size="md">
                <Input
                 variant="filled"
                 style={{ backgroundColor: "#1e1e26" }}
-                placeholder="Current Stock"
-                type="Text"
-                id="currentStock_inventory"
+                pr="4.5rem"
+                type={show ? "text" : "password"}
+                placeholder="Password"
+                id="password_edit"
                />
+               <InputRightElement width="4.5rem">
+                <Button
+                 h="1.75rem"
+                 size="sm"
+                 onClick={handleClick}
+                 style={{ backgroundColor: "transparent" }}
+                >
+                 {show ? "Hide" : "Show"}
+                </Button>
+               </InputRightElement>
               </InputGroup>
-              <InputGroup>
-               <Input
-                variant="filled"
-                style={{
-                 borderBottom: "none",
-                 backgroundColor: "#1e1e26",
-                }}
-                placeholder="Date"
-                type="Date"
-                id="date_inventory"
-               />
-              </InputGroup>
+              <RadioGroup onChange={setValue} value={value}>
+               <Stack spacing={2}>
+                <Radio id="admin_User_edit" value="0">
+                 User
+                </Radio>
+                <Radio id="regular_User_edit" value="1">
+                 Admin
+                </Radio>
+               </Stack>
+              </RadioGroup>
              </Stack>
             </div>
             <div class="modal-footer">
-             <button type="button" class="btn btn-info" onClick={addInventory}>
+             <button type="button" class="btn btn-info" onClick={register}>
               Add
              </button>
-             <button type="button" class="btn btn-info" onClick={editInventory}>
+             <button type="button" class="btn btn-info" onClick={editAccount}>
               Update
              </button>
              <button
               type="button"
               class="btn btn-danger"
-              onClick={deleteInventory}
+              onClick={deleteAccount}
              >
               Delete
              </button>
@@ -371,4 +400,4 @@ function Inventory() {
  );
 }
 
-export default Inventory;
+export default Accounts;

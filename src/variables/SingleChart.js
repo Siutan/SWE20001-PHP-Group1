@@ -221,10 +221,6 @@ function SyncData() {
 
   if (ls.get("salesWeeklyData") == null) {
     getData();
-    console.log("null confirmed, getting Data")
-    //console.log("fetched data = " + ls.get("salesData"))
-  } else {
-    //console.log(("cached data = " + ls.get("salesData")))
   }
   async function getData() {
     var x = document.getElementById("chartData1");
@@ -246,7 +242,6 @@ function SyncData() {
 
       setWeeklyHidden(ls.get("salesWeeklyData"));
     } catch (err) {
-      console.log(err);
     }
 
   }
@@ -255,7 +250,6 @@ function SyncData() {
   //which will run the async function getData again
   function resetLocal() {
     ls.set("salesWeeklyData", null, 60000);
-    console.log("reset local storage")
     setHidden(true);
     setWeeklyHidden(true);
   }
