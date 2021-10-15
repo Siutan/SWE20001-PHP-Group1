@@ -43,7 +43,7 @@ http://localhost:3000/
 Down sales report as CSV 
 
 ## Backend
-in case you're looking for the backend you can find it [here](https://github.com/zoietady/php-sales-and-inventory-rest-api)
+If you're looking for the backend you can find it [here](https://github.com/zoietady/php-sales-and-inventory-rest-api)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
