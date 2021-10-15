@@ -55,6 +55,7 @@ function register() {
    headers: { "Content-Type": "application/json" },
    body: JSON.stringify(payload),
   });
+  localStorage.removeItem("userData");
   alert("Added new User successfully");
  } else {
   alert("Did not add New User");
@@ -91,6 +92,7 @@ function editAccount() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
    });
+   localStorage.removeItem("userData");
    alert("Updated User successfully");
   } else {
    alert("Did not Update User");
@@ -112,6 +114,7 @@ function deleteAccount() {
     credentials: "include",
     headers: { "Content-Type": "application/json" },
    });
+   localStorage.removeItem("userData");
    alert("Deleted User successfully");
   } else {
    alert("Did not Delete User");

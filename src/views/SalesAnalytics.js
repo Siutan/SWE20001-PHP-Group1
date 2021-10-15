@@ -3,6 +3,7 @@ import { Spinner } from "react-bootstrap";
 import DataTable, { createTheme } from "react-data-table-component";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Button } from "reactstrap";
+import { CSVLink, CSVDownload } from "react-csv";
 
 function convertToPercentage(num) {
  let percentage = num * 100;
@@ -108,9 +109,9 @@ function SalesReports() {
 
  const [data, setData] = useState([]);
 
- useEffect(() => {
-  const ls = require("localstorage-ttl");
+ const ls = require("localstorage-ttl");
 
+ useEffect(() => {
   async function checkls() {
    if (ls.get("salesReports") === null) {
     getData();
@@ -191,68 +192,43 @@ function SalesReports() {
    },
   },
  };
-
- // EXPORT CSV
- function convertArrayOfObjectsToCSV(array) {
-  // COONVERT THE TABLE INTO A SUITABLE FORMAT
-  let result;
-
-  const columnDelimiter = ",";
-  const lineDelimiter = "\n";
-  const keys = Object.keys(data[0]);
-
-  result = "";
-  result += keys.join(columnDelimiter);
-  result += lineDelimiter;
-
-  array.forEach((item) => {
-   let ctr = 0;
-   keys.forEach((key) => {
-    if (ctr > 0) result += columnDelimiter;
-
-    result += item[key];
-
-    ctr++;
-   });
-   result += lineDelimiter;
-  });
-
-  return result;
- }
-
- // inspiration from https://codepen.io/Jacqueline34/pen/pyVoWr
- function downloadCSV(array, source) {
-  const link = document.createElement("a");
-  let csv = convertArrayOfObjectsToCSV(array);
-  if (csv == null) return;
-
-  let today = new Date().toISOString().slice(0, 10); // TODAYS DATE IN THE YYYY-MM-DD FORMAT
-
-  const filename = `Sales_${source}_Forecast_${today}.csv`; // SET CSV FILENAME
-
-  if (!csv.match(/^data:text\/csv/i)) {
-   csv = `data:text/csv;charset=utf-8,${csv}`;
-  }
-
-  link.setAttribute("href", encodeURI(csv));
-  link.setAttribute("download", filename);
-  link.click();
- }
-
- const Export = (
-  { onExport } // BIND BUTTON TO EXPORT
- ) => <Button onClick={(e) => onExport(e.target.value)}>Export CSV</Button>;
-
- const actionsMemoWeekly = React.useMemo(
-  // ADD EXPORT AS AN ACTION WHEN CALLED BY TABLE
-  () => <Export onExport={() => downloadCSV(data, "Weekly")} />,
-  []
- );
- const actionsMemoMonthly = React.useMemo(
-  // ADD EXPORT AS AN ACTION WHEN CALLED BY TABLE
-  () => <Export onExport={() => downloadCSV(data, "Monthly")} />,
-  []
- );
+ // Download data as excel CSV
+ const jsonHeaders = [
+  { label: "product group", key: "product_group" },
+  { label: "previous month revenue", key: "previous_month_revenue" },
+  { label: "Previuos month volume", key: "previous_month_volume" },
+  { label: "current month revenue", key: "current_month_revenue" },
+  { label: "current month volume", key: "current_month_volume" },
+  { label: "previous week revenue", key: "previous_week_revenue" },
+  { label: "previous week volume", key: "previous_week_volume" },
+  { label: "current week revenue", key: "current_week_revenue" },
+  { label: "current week volume", key: "current_week_volume" },
+  { label: "weekly revenue change", key: "revenue_change.1w" },
+  { label: "monthly revenue change", key: "revenue_change.1m" },
+  { label: "Weekly Volume change", key: "volume_change.1w" },
+  { label: "monthly Volume change", key: "volume_change.1m" },
+  {
+   label: "weekly forecasted revenue change",
+   key: "forecasted_revenue_change.1w",
+  },
+  {
+   label: "monthly forecasted revenue change",
+   key: "forecasted_revenue_change.1m",
+  },
+  { label: "weekly forecasted revenue", key: "forecasted_revenue.1w" },
+  { label: "monthly forecasted revenue", key: "forecasted_revenue.1m" },
+  {
+   label: "weekly forecasted volume change",
+   key: "forecasted_volume_change.1w",
+  },
+  {
+   label: "monthly forecasted volume change",
+   key: "forecasted_volume_change.1m",
+  },
+  { label: "weekly forecasted volume", key: "forecasted_volume.1w" },
+  { label: "monthly forecasted volume", key: "forecasted_volume.1m" },
+ ];
+ const jsonData = ls.get("salesReports");
 
  return (
   <>
@@ -267,7 +243,15 @@ function SalesReports() {
       </div>
      ) : (
       // IF loadingData IS flase DISPLAY TABLE
-      <>
+      <div>
+       <CSVLink
+        as={Button}
+        filename={"Sales_Analytics.csv"}
+        data={jsonData}
+        headers={jsonHeaders}
+       >
+        <Button>Downlad CSV</Button>
+       </CSVLink>
        <DataTable
         title="Weekly Reports"
         columns={columnsWeeks}
@@ -276,7 +260,6 @@ function SalesReports() {
         highlightOnHover
         customStyles={customStyles}
         theme="solarized"
-        actions={actionsMemoWeekly}
         expandableRows
         expandableRowsComponent={ExpandedComponent}
        />
@@ -289,11 +272,10 @@ function SalesReports() {
         highlightOnHover
         customStyles={customStyles}
         theme="solarized"
-        actions={actionsMemoMonthly}
         expandableRows
         expandableRowsComponent={ExpandedComponent}
        />
-      </>
+      </div>
      )}
     </ChakraProvider>
    </div>

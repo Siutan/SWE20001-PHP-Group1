@@ -3,6 +3,7 @@ import { Spinner } from "react-bootstrap";
 import DataTable, { createTheme } from "react-data-table-component";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Button } from "reactstrap";
+import { CSVLink, CSVDownload } from "react-csv";
 
 //TODO:
 //  Replace JavaScript alert with alerts from "react-notification-alert" package
@@ -11,7 +12,7 @@ import { Button } from "reactstrap";
 //  local storage item instead so its redownloaded on UI refresh
 
 function convertToCurrency(num) {
- return num.toFixed(2) + " AUD";
+ return "AUD " + num.toFixed(2);
 }
 
 function convertToInt(num) {
@@ -30,6 +31,9 @@ const ExpandedComponent = ({ data }) => (
 );
 
 function Sales() {
+ // initilise Localstorage
+ const ls = require("localstorage-ttl");
+
  // SET URL TO GET SALES ENDPOINT
  const requestUrl = "https://sisrestapi.herokuapp.com/report/product";
 
@@ -64,7 +68,7 @@ function Sales() {
   },
   {
    name: "Week volume",
-   selector: (row) => convertToCurrency(row.current_week_volume),
+   selector: (row) => row.current_week_volume,
    sortable: true,
    reorder: true,
   },
@@ -76,7 +80,7 @@ function Sales() {
   },
   {
    name: "Forecast volume",
-   selector: (row) => convertToCurrency(row.forecasted_volume["1w"]),
+   selector: (row) => Math.round(row.forecasted_volume["1w"]),
    sortable: true,
    reorder: true,
   },
@@ -118,7 +122,7 @@ function Sales() {
   },
   {
    name: "Cur: Month volume",
-   selector: (row) => convertToCurrency(row.current_month_volume),
+   selector: (row) => row.current_month_volume,
    reorder: true,
   },
   {
@@ -128,7 +132,7 @@ function Sales() {
   },
   {
    name: "Forecast volume",
-   selector: (row) => convertToCurrency(row.forecasted_volume["1m"]),
+   selector: (row) => Math.round(row.forecasted_volume["1m"]),
    reorder: true,
   },
   {
@@ -146,14 +150,12 @@ function Sales() {
  const [data, setData] = useState([]);
 
  useEffect(() => {
-  const ls = require("localstorage-ttl");
-
   async function checkls() {
-   if (ls.get("salesData") == null) {
+   if (ls.get("productAnalytics") == null) {
     getData();
    } else {
-    const salesData = ls.get("salesData");
-    setData(salesData);
+    const productAnalytics = ls.get("productAnalytics");
+    setData(productAnalytics);
     setLoadingData(false);
    }
   }
@@ -166,7 +168,7 @@ function Sales() {
     .then((response) => response.json())
     .then((data) => {
      setData(data);
-     ls.set("salesData", data, 60000);
+     ls.set("productAnalytics", data, 60000);
      setLoadingData(false); // SWITCHES THE loadingData TO false SO THE APP KNOWS CONTENT IS LOADED
     });
   }
@@ -228,67 +230,49 @@ function Sales() {
   },
  };
 
- // EXPORT CSV
- function convertArrayOfObjectsToCSV(array) {
-  // COONVERT THE TABLE INTO A SUITABLE FORMAT
-  let result;
+ const jsonHeaders = [
+  { label: "product id", key: "product_id" },
+  { label: "product name", key: "product_name" },
+  { label: "product group", key: "product_group" },
+  { label: "previous month revenue", key: "previous_month_revenue" },
+  { label: "Previuos month volume", key: "previous_month_volume" },
+  { label: "current month revenue", key: "current_month_revenue" },
+  { label: "current month volume", key: "current_month_volume" },
+  { label: "previous week revenue", key: "previous_week_revenue" },
+  { label: "previous week volume", key: "previous_week_volume" },
+  { label: "current week revenue", key: "current_week_revenue" },
+  { label: "current week volume", key: "current_week_volume" },
+  { label: "weekly revenue change", key: "revenue_change.1w" },
+  { label: "monthly revenue change", key: "revenue_change.1m" },
+  { label: "Weekly Volume change", key: "volume_change.1w" },
+  { label: "monthly Volume change", key: "volume_change.1m" },
+  {
+   label: "weekly forecasted revenue change",
+   key: "forecasted_revenue_change.1w",
+  },
+  {
+   label: "monthly forecasted revenue change",
+   key: "forecasted_revenue_change.1m",
+  },
+  { label: "weekly forecasted revenue", key: "forecasted_revenue.1w" },
+  { label: "monthly forecasted revenue", key: "forecasted_revenue.1m" },
+  {
+   label: "weekly forecasted volume change",
+   key: "forecasted_volume_change.1w",
+  },
+  {
+   label: "monthly forecasted volume change",
+   key: "forecasted_volume_change.1m",
+  },
+  { label: "weekly forecasted volume", key: "forecasted_volume.1w" },
+  { label: "monthly forecasted volume", key: "forecasted_volume.1m" },
+  { label: "last update", key: "inventory_comparison.last_update" },
+  { label: "current stock", key: "inventory_comparison.current_stock" },
+  { label: "1 week deficit", key: "inventory_comparison.1w_deficit" },
+  { label: "1 month deficit", key: "inventory_comparison.1m_deficit" },
+ ];
 
-  const columnDelimiter = ",";
-  const lineDelimiter = "\n";
-  const keys = Object.keys(data[0]);
-
-  result = "";
-  result += keys.join(columnDelimiter);
-  result += lineDelimiter;
-
-  array.forEach((item) => {
-   let ctr = 0;
-   keys.forEach((key) => {
-    if (ctr > 0) result += columnDelimiter;
-
-    result += item[key];
-
-    ctr++;
-   });
-   result += lineDelimiter;
-  });
-
-  return result;
- }
-
- // inspiration from https://codepen.io/Jacqueline34/pen/pyVoWr
- function downloadCSV(array, source) {
-  const link = document.createElement("a");
-  let csv = convertArrayOfObjectsToCSV(array);
-  if (csv == null) return;
-
-  let today = new Date().toISOString().slice(0, 10); // TODAYS DATE IN THE YYYY-MM-DD FORMAT
-
-  const filename = `Sales_${source}_Forecast_${today}.csv`; // SET CSV FILENAME
-
-  if (!csv.match(/^data:text\/csv/i)) {
-   csv = `data:text/csv;charset=utf-8,${csv}`;
-  }
-
-  link.setAttribute("href", encodeURI(csv));
-  link.setAttribute("download", filename);
-  link.click();
- }
-
- const Export = (
-  { onExport } // BIND BUTTON TO EXPORT
- ) => <Button onClick={(e) => onExport(e.target.value)}>Export CSV</Button>;
-
- const actionsMemoWeekly = React.useMemo(
-  // ADD EXPORT AS AN ACTION WHEN CALLED BY TABLE
-  () => <Export onExport={() => downloadCSV(data, "Weekly")} />,
-  []
- );
- const actionsMemoMonthly = React.useMemo(
-  // ADD EXPORT AS AN ACTION WHEN CALLED BY TABLE
-  () => <Export onExport={() => downloadCSV(data, "Monthly")} />,
-  []
- );
+ const jsonData = ls.get("productAnalytics");
 
  return (
   <>
@@ -303,40 +287,38 @@ function Sales() {
       </div>
      ) : (
       // IF loadingData IS flase DISPLAY TABLE
-      <DataTable
-       title="Weekly Product Information Table "
-       columns={weeklyColumn}
-       data={data}
-       pagination
-       highlightOnHover
-       customStyles={customStyles}
-       actions={actionsMemoWeekly}
-       theme="solarized"
-       expandableRows
-       expandableRowsComponent={ExpandedComponent}
-      />
-     )}
-     {loadingData ? ( // CHECK IF loadingData IS true
-      <div className="d-flex justify-content-center">
-       <h1>
-        <Spinner animation="border" /> Loading (If data isnt Loading, Please log
-        in again)...
-       </h1>
+      <div>
+       <CSVLink
+        filename={"Product_Analytics.csv"}
+        data={jsonData}
+        headers={jsonHeaders}
+       >
+        <Button>Downlad CSV</Button>
+       </CSVLink>
+       ;
+       <DataTable
+        title="Weekly Product Information Table "
+        columns={weeklyColumn}
+        data={data}
+        pagination
+        highlightOnHover
+        customStyles={customStyles}
+        theme="solarized"
+        expandableRows
+        expandableRowsComponent={ExpandedComponent}
+       />
+       <DataTable
+        title="Monthly Product Information Table "
+        columns={monthlyColumn}
+        data={data}
+        pagination
+        highlightOnHover
+        customStyles={customStyles}
+        theme="solarized"
+        expandableRows
+        expandableRowsComponent={ExpandedComponent}
+       />
       </div>
-     ) : (
-      // IF loadingData IS flase DISPLAY TABLE
-      <DataTable
-       title="Monthly Product Information Table "
-       columns={monthlyColumn}
-       data={data}
-       pagination
-       highlightOnHover
-       customStyles={customStyles}
-       theme="solarized"
-       actions={actionsMemoMonthly}
-       expandableRows
-       expandableRowsComponent={ExpandedComponent}
-      />
      )}
     </ChakraProvider>
    </div>
