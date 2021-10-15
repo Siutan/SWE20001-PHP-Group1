@@ -31,7 +31,14 @@ function convertToInt (num) {
   return Math.abs(num.toFixed(0));
 }
 
-const ExpandedComponent = ({ data }) => <pre>{JSON.stringify(data, null, 2)}</pre>;
+const ExpandedComponent = ({ data }) => <pre>
+      {JSON.stringify(data, null, 2)
+        .replaceAll('{', '')
+        .replaceAll('}', '')
+        .replaceAll(',', '')
+        .replaceAll('"', '')
+        .replaceAll('_', ' ')}
+    </pre>;
 
 function Sales() {
   // SET URL TO GET SALES ENDPOINT
@@ -233,71 +240,10 @@ function Sales() {
     },
   };
 
-  // EXPORT CSV
-  function convertArrayOfObjectsToCSV(array) {
-    // COONVERT THE TABLE INTO A SUITABLE FORMAT
-    let result;
-
-    const columnDelimiter = ",";
-    const lineDelimiter = "\n";
-    const keys = Object.keys(data[0]);
-
-    result = "";
-    result += keys.join(columnDelimiter);
-    result += lineDelimiter;
-
-    array.forEach((item) => {
-      let ctr = 0;
-      keys.forEach((key) => {
-        if (ctr > 0) result += columnDelimiter;
-
-        result += item[key];
-
-        ctr++;
-      });
-      result += lineDelimiter;
-    });
-
-    return result;
-  }
-
-  // inspiration from https://codepen.io/Jacqueline34/pen/pyVoWr
-  function downloadCSV(array) {
-    const link = document.createElement("a");
-    let csv = convertArrayOfObjectsToCSV(array);
-    if (csv == null) return;
-
-    let today = new Date().toISOString().slice(0, 10); // TODAYS DATE IN THE YYYY-MM-DD FORMAT
-
-    const filename = `Sales_Data_${today}.csv`; // SET CSV FILENAME
-
-    if (!csv.match(/^data:text\/csv/i)) {
-      csv = `data:text/csv;charset=utf-8,${csv}`;
-    }
-
-    link.setAttribute("href", encodeURI(csv));
-    link.setAttribute("download", filename);
-    link.click();
-  }
-
-  const Export = (
-    { onExport } // BIND BUTTON TO EXPORT
-  ) => <Button onClick={(e) => onExport(e.target.value)}>Export CSV</Button>;
-
-  const actionsMemo = React.useMemo(
-    // ADD EXPORT AS AN ACTION WHEN CALLED BY TABLE
-    () => <Export onExport={() => downloadCSV(data)} />,
-    []
-  );
-
   return (
     <>
       <div className="content">
         <ChakraProvider>
-          <Row>
-            <Col md="12">
-              <Card>
-                <CardBody>
                   <Tabs
                     variant="soft-rounded"
                     size="md"
@@ -330,7 +276,6 @@ function Sales() {
                             highlightOnHover
                             customStyles={customStyles}
                             theme="solarized"
-                            actions={actionsMemo}
                             expandableRows
                             expandableRowsComponent={ExpandedComponent}
                           />
@@ -352,7 +297,6 @@ function Sales() {
                             highlightOnHover
                             customStyles={customStyles}
                             theme="solarized"
-                            actions={actionsMemo}
                             expandableRows
                             expandableRowsComponent={ExpandedComponent}
                           />
@@ -360,10 +304,6 @@ function Sales() {
                       </TabPanel>
                     </TabPanels>
                   </Tabs>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
         </ChakraProvider>
       </div>
     </>

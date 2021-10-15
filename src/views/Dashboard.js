@@ -1,8 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 import { ChakraProvider } from "@chakra-ui/react";
-import { PieChart } from "react-minimal-pie-chart";
-import SingleChart from 'variables/SingleChart.js'
+import SingleChart from 'variables/SingleChart.js';
 import {
   Text,
   Heading,
@@ -134,7 +133,6 @@ function EditInput() {
                   </Stat>
                 </CardBody>
               </Card>
-
               <Card>
                 <CardBody>
                   <Stat color="white" px="5">

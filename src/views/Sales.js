@@ -2,7 +2,6 @@ import React, { useMemo, useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 import DataTable, { createTheme } from "react-data-table-component";
 import { ChakraProvider } from "@chakra-ui/react";
-import SalesReports from "./SalesReports";
 import {
   Tabs,
   TabList,
@@ -373,19 +372,6 @@ function Sales() {
                         >
                           Sales Management
                         </Tab>
-                        <Tab
-                          _selected={{
-                            bg: "linear-gradient(to top left, #2381d3 0%, #18a2b9 100%)",
-                          }}
-                          style={{
-                            color: "white",
-                            outline: "none",
-                            border: "none",
-                            boxShadow: "none",
-                          }}
-                        >
-                          Sales Report
-                        </Tab>
                       </TabList>
                     </div>
                     <TabPanels>
@@ -486,13 +472,7 @@ function Sales() {
                             Delete
                           </button>
                         </div>
-                      </TabPanel>
-                       <TabPanel>
-                        <div>
-                        <SalesReports />  
-                        </div>
-                      </TabPanel>
-      
+                      </TabPanel>      
                     </TabPanels>
                   </Tabs>
                 </CardBody>

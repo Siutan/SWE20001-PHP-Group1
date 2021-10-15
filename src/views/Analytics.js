@@ -4,8 +4,24 @@ import React from "react";
 // reactstrap components
 import {
   Row,
-  Col
+  Col,
+  Card, 
+  CardBody,
+  CardHeader,
 } from "reactstrap";
+// Chakra UI components
+import {
+  ChakraProvider,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+} from '@chakra-ui/react'
+
+import ProductAnalytics from "./ProductAnalytics";
+import SalesAnalytics from "./SalesAnalytics";
+
 
 // core components
 import MainChart from 'variables/MainChart.js'
@@ -44,81 +60,85 @@ function Analytics(props) {
   return (
     <>
       <div className="content">
+        <ChakraProvider>
         <Row>
           <Col xs="12">
-            <MainChart/>
+            <Card>
+              <CardBody>
+                <Tabs
+                    variant="soft-rounded"
+                    size="md"
+                    isFitted
+                    defaultIndex={0}
+                  >
+                    <div
+                      style={{
+                        backgroundColor: "#1e1e26",
+                        borderRadius: "100px",
+                      }}
+                    >
+                      <TabList>
+                        <Tab
+                          _selected={{
+                            bg: "linear-gradient(to top left, #2381d3 0%, #18a2b9 100%)"
+                          }}
+                          style={{
+                            color: "white",
+                            outline: "none",
+                            border: "none",
+                            boxShadow: "none",
+                          }}
+                        >
+                          Graphed Reports
+                        </Tab>
+                        <Tab
+                          _selected={{
+                            bg: "linear-gradient(to top left, #2381d3 0%, #18a2b9 100%)",
+                          }}
+                          style={{
+                            color: "white",
+                            outline: "none",
+                            border: "none",
+                            boxShadow: "none",
+                          }}
+                        >
+                          Product Analytics
+                        </Tab>
+                        <Tab
+                          _selected={{
+                            bg: "linear-gradient(to top left, #2381d3 0%, #18a2b9 100%)",
+                          }}
+                          style={{
+                            color: "white",
+                            outline: "none",
+                            border: "none",
+                            boxShadow: "none",
+                          }}
+                        >
+                          Sales Analytics
+                        </Tab>
+                      </TabList>
+                    </div>
+                    <TabPanels>
+                      <TabPanel>
+                        <MainChart/>
+                      </TabPanel>
+                      <TabPanel>
+                        <ProductAnalytics/>
+                      </TabPanel>
+                      <TabPanel>
+                        <SalesAnalytics/>
+                      </TabPanel>
+                    </TabPanels>
+                    </Tabs>
+              </CardBody>
+            </Card>
           </Col>
         </Row>
-
+        </ChakraProvider>
       </div>
     </>
   );
 }
 
 export default Analytics;
-
-
-// <Row>
-//   <Col lg="4">
-//     <Card className="card-chart">
-//       <CardHeader>
-//         <h5 className="card-category">Predicted Sales of </h5>
-//         <CardTitle tag="h3">
-//           <i className="tim-icons icon-bell-55 text-info" />
-//           <select>
-//             ;<option value='' disabled selected>
-//                     Select Product
-//                   </option>
-//                   ;<option value=''>
-//                     Product 1
-//                   </option>
-//                   ;<option value='' >
-//                     Product 2
-//                   </option>
-//                   ;<option value='' >
-//                     Product 3
-//                   </option>
-//
-//           </select>
-//         </CardTitle>
-//       </CardHeader>
-//       <CardBody>
-//         <Chart2/>
-//       </CardBody>
-//     </Card>
-//   </Col>
-//   <Col lg="4">
-//     <Card className="card-chart">
-//       <CardHeader>
-//         <h5 className="card-category">Daily Sales</h5>
-//         <CardTitle tag="h3">
-//           <i className="tim-icons icon-delivery-fast text-primary" />{" "}
-//           3,500€
-//         </CardTitle>
-//       </CardHeader>
-//       <CardBody>
-//         <h1>placeholder</h1>
-//       </CardBody>
-//     </Card>
-//   </Col>
-//   <Col lg="4">
-//     <Card className="card-chart">
-//       <CardHeader>
-//         <h5 className="card-category">Completed Tasks</h5>
-//         <CardTitle tag="h3">
-//           <i className="tim-icons icon-send text-success" /> 12,100K
-//         </CardTitle>
-//       </CardHeader>
-//       <CardBody>
-//         <div className="chart-area">
-//           <Line
-//             data={chart4Data.data}
-//             options={chartOptions4}
-//           />
-//         </div>
-//       </CardBody>
-//     </Card>
-//   </Col>
-// </Row>
-// <Row>
-// </Row>
