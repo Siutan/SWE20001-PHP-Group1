@@ -10,11 +10,6 @@ import { Button } from "reactstrap";
 //  Instead of calling data from the API after CRUD methods, delete relevant
 //  local storage item instead so its redownloaded on UI refresh
 
-function convertToPercentage(num) {
- let percentage = num * 100;
- return percentage.toFixed(0) + " %";
-}
-
 function convertToCurrency(num) {
  return num.toFixed(2) + " AUD";
 }
@@ -75,13 +70,13 @@ function Sales() {
   },
   {
    name: "Forecast revenue",
-   selector: (row) => convertToPercentage(row.forecasted_revenue["1w"]),
+   selector: (row) => convertToCurrency(row.forecasted_revenue["1w"]),
    sortable: true,
    reorder: true,
   },
   {
    name: "Forecast volume",
-   selector: (row) => convertToPercentage(row.forecasted_volume["1w"]),
+   selector: (row) => convertToCurrency(row.forecasted_volume["1w"]),
    sortable: true,
    reorder: true,
   },
@@ -128,12 +123,12 @@ function Sales() {
   },
   {
    name: "Forecast revenue",
-   selector: (row) => convertToPercentage(row.forecasted_revenue["1m"]),
+   selector: (row) => convertToCurrency(row.forecasted_revenue["1m"]),
    reorder: true,
   },
   {
    name: "Forecast volume",
-   selector: (row) => convertToPercentage(row.forecasted_volume["1m"]),
+   selector: (row) => convertToCurrency(row.forecasted_volume["1m"]),
    reorder: true,
   },
   {
