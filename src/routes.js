@@ -4,6 +4,7 @@ import Inventory from "views/Inventory.js";
 import Sales from "views/Sales";
 import Accounts from "views/Users"
 import Products from "views/Products"
+import ProductInformation from "views/productInformation.js";
 
 var routes = [
   {
@@ -39,6 +40,13 @@ var routes = [
     name: "Sales",
     icon: "tim-icons icon-money-coins",
     component: Sales,
+    layout: "/admin",
+  },
+  {
+    path: "/productInformation",
+    name: "Product Information",
+    icon: "tim-icons icon-paper",
+    component: ProductInformation,
     layout: "/admin",
   },
   {
