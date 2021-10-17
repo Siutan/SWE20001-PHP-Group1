@@ -13,9 +13,12 @@ import {
  Stack,
 } from "@chakra-ui/react";
 
+import { CSVLink, CSVDownload } from "react-csv";
+
 // reactstrap components
 import { Button, Card, CardBody, Row, Col } from "reactstrap";
 
+const ls = require("localstorage-ttl");
 // TODO:
 //  CHANGE INVENTORY MANAGEMENT FOR NEW QUERY. (SEND POST REQUEST TO INVENTORY
 //  ENDPOINT AND CHANGE FORM)
@@ -143,7 +146,7 @@ function Inventory() {
  const [data, setData] = useState([]);
 
  useEffect(() => {
-  const ls = require("localstorage-ttl");
+  
 
   async function checkls() {
    if (ls.get("inventoryData") === null) {
@@ -225,63 +228,6 @@ function Inventory() {
   },
  };
 
- // EXPORT CSV
- function convertArrayOfObjectsToCSV(array) {
-  // COONVERT THE TABLE INTO A SUITABLE FORMAT
-  let result;
-
-  const columnDelimiter = ",";
-  const lineDelimiter = "\n";
-  const keys = Object.keys(data[0]);
-
-  result = "";
-  result += keys.join(columnDelimiter);
-  result += lineDelimiter;
-
-  array.forEach((item) => {
-   let ctr = 0;
-   keys.forEach((key) => {
-    if (ctr > 0) result += columnDelimiter;
-
-    result += item[key];
-
-    ctr++;
-   });
-   result += lineDelimiter;
-  });
-
-  return result;
- }
-
- // inspiration from https://codepen.io/Jacqueline34/pen/pyVoWr
- function downloadCSV(array) {
-  const link = document.createElement("a");
-  let csv = convertArrayOfObjectsToCSV(array);
-  if (csv == null) return;
-
-  let today = new Date().toISOString().slice(0, 10); // TODAYS DATE IN THE YYYY-MM-DD FORMAT
-
-  const filename = `Inventory_Data_${today}.csv`; // SET CSV FILENAME
-
-  if (!csv.match(/^data:text\/csv/i)) {
-   csv = `data:text/csv;charset=utf-8,${csv}`;
-  }
-
-  link.setAttribute("href", encodeURI(csv));
-  link.setAttribute("download", filename);
-  link.click();
- }
-
- const Export = (
-  { onExport } // BIND BUTTON TO EXPORT
- ) => <Button onClick={(e) => onExport(e.target.value)}>Export CSV</Button>;
-
- const actionsMemo = React.useMemo(
-  // ADD EXPORT AS AN ACTION WHEN CALLED BY TABLE
-  () => <Export onExport={() => downloadCSV(data)} />,
-  []
- );
-
  return (
   <>
    <div className="content">
@@ -337,16 +283,20 @@ function Inventory() {
              </div>
             ) : (
              // IF loadingData IS flase DISPLAY TABLE
-             <DataTable
-              title="Inventory Table"
-              columns={columns}
-              data={data}
-              pagination
-              highlightOnHover
-              customStyles={customStyles}
-              theme="solarized"
-              actions={actionsMemo}
+             <div>
+                <CSVLink filename={"InventoryData.csv"} data={data}><Button>Downlad CSV</Button></CSVLink>
+                <DataTable
+                  title="Inventory Table"
+                  columns={columns}
+                  data={data}
+                  pagination
+                  highlightOnHover
+                  customStyles={customStyles}
+                  theme="solarized"
              />
+
+             </div>
+
             )}
            </TabPanel>
            <TabPanel>
