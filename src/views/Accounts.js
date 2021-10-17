@@ -24,54 +24,61 @@ import { Card, CardBody, Row, Col } from "reactstrap";
 
 //ADD ACCOUNT
 function register() {
+ var userId = document.getElementById("userId").value;
  var firstname = document.getElementById("firstName").value;
  var lastname = document.getElementById("lastName").value;
- var password = document.getElementById("password_register").value;
+ var password = document.getElementById("password").value;
 
- if (document.getElementById("admin_User").checked) {
-  var admin = true;
- } else if (document.getElementById("regular_User").checked) {
-  var admin = false;
- }
+ if (userId != null) {
+  alert(
+   "Do not specify a User ID if adding a new user, it will be automatically generated"
+  );
+ } else {
+  if (document.getElementById("admin_User").checked) {
+   var admin = true;
+  } else if (document.getElementById("regular_User").checked) {
+   var admin = false;
+  }
 
- const payload = {
-  first_name: firstname,
-  last_name: lastname,
-  admin: admin,
-  password: password,
- };
- var r = window.confirm(
-  `do you want to Register the following User \n
+  const payload = {
+   first_name: firstname,
+   last_name: lastname,
+   admin: admin,
+   password: password,
+  };
+  var r = window.confirm(
+   `do you want to Register the following User \n
     First Name: ${firstname} \n
     Last Name: ${lastname} \n
     Admin: ${admin} \n
     Password: ${password}`
- );
+  );
 
- if (r === true) {
-  fetch("https://sisrestapi.herokuapp.com/auth/register", {
-   method: "POST",
-   credentials: "include",
-   headers: { "Content-Type": "application/json" },
-   body: JSON.stringify(payload),
-  });
-  localStorage.removeItem("userData");
-  alert("Added new User successfully");
- } else {
-  alert("Did not add New User");
+  if (r === true) {
+   fetch("https://sisrestapi.herokuapp.com/auth/register", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+   });
+   localStorage.removeItem("userData");
+   alert("Added new User successfully");
+  } else {
+   alert("Did not add New User");
+  }
  }
 }
 
 //EDIT ACCOUNT
 function editAccount() {
  var userId = document.getElementById("userId").value;
- var firstname = document.getElementById("firstName_edit").value;
- var lastname = document.getElementById("lastName_edit").value;
- var password = document.getElementById("password_edit").value;
+ var firstname = document.getElementById("firstName").value;
+ var lastname = document.getElementById("lastName").value;
+ var password = document.getElementById("password").value;
 
- if (document.getElementById("admin_User_edit").checked) {
+ if (document.getElementById("admin_User").checked) {
   var admin = true;
- } else if (document.getElementById("regular_User_edit").checked) {
+ } else if (document.getElementById("regular_User").checked) {
   var admin = false;
  }
  const payload = {
@@ -83,7 +90,7 @@ function editAccount() {
  if (userId === "") {
   alert("enter user Id of the account you want to update");
  } else {
-  var r = window.confirm("do you want to Update the User records");
+  var r = window.confirm("do you want to update this User");
 
   if (r === true) {
    fetch("https://sisrestapi.herokuapp.com/users/" + userId, {
@@ -93,9 +100,9 @@ function editAccount() {
     body: JSON.stringify(payload),
    });
    localStorage.removeItem("userData");
-   alert("Updated User successfully");
+   alert("updated User successfully");
   } else {
-   alert("Did not Update User");
+   alert("Did not update User");
   }
  }
 }
@@ -106,7 +113,7 @@ function deleteAccount() {
  if (userId === "") {
   alert("enter user Id of the account you want to delete");
  } else {
-  var r = window.confirm(`do you want to Update the User records`);
+  var r = window.confirm(`do you want to Delete this user`);
 
   if (r === true) {
    fetch("https://sisrestapi.herokuapp.com/users/" + userId, {
@@ -330,7 +337,7 @@ function Accounts() {
                 style={{ backgroundColor: "#1e1e26" }}
                 placeholder="First Name"
                 type="text"
-                id="firstName_edit"
+                id="firstName"
                />
               </InputGroup>
               <InputGroup>
@@ -339,7 +346,7 @@ function Accounts() {
                 style={{ backgroundColor: "#1e1e26" }}
                 placeholder="Last Name"
                 type="Text"
-                id="lastName_edit"
+                id="lastName"
                />
               </InputGroup>
 
@@ -350,7 +357,7 @@ function Accounts() {
                 pr="4.5rem"
                 type={show ? "text" : "password"}
                 placeholder="Password"
-                id="password_edit"
+                id="password"
                />
                <InputRightElement width="4.5rem">
                 <Button
@@ -365,11 +372,11 @@ function Accounts() {
               </InputGroup>
               <RadioGroup onChange={setValue} value={value}>
                <Stack spacing={2}>
-                <Radio id="admin_User_edit" value="0">
-                 User
-                </Radio>
-                <Radio id="regular_User_edit" value="1">
+                <Radio id="admin_User" value="0">
                  Admin
+                </Radio>
+                <Radio id="regular_User" value="1">
+                 User
                 </Radio>
                </Stack>
               </RadioGroup>
